@@ -85,6 +85,9 @@ function load_settings_assets( $hook ) {
 		return;
 	}
 
+	// Set my handle.
+	$handle = 'lw-woo-gdpr-user-optins-admin';
+
 	// Set a file suffix structure based on whether or not we want a minified version.
 	$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'lw-woo-gdpr-user-optins-admin' : 'lw-woo-gdpr-user-optins-admin.min';
 
@@ -92,7 +95,15 @@ function load_settings_assets( $hook ) {
 	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : LWWOOGDPR_OPTINS_VERS;
 
 	// Load our CSS file.
-	wp_enqueue_style( 'lw-woo-gdpr-user-optins-admin', LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
+	wp_enqueue_style( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
+
+	// And our JS.
+	wp_enqueue_script( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
+	wp_localize_script( $handle, 'wooGDPRAdmin',
+		array(
+			'dismiss_text' => __( 'Dismiss this notice.', 'lw-woo-gdpr-user-optins' ),
+		)
+	);
 }
 
 /**

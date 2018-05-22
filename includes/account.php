@@ -100,7 +100,7 @@ function load_endpoint_assets() {
  * @return HTML
  */
 function add_endpoint_anchor() {
-	echo '<div class="lw-woo-account-notices"></div>';
+	echo '<div class="lw-woo-gdpr-user-optins-account-notices"></div>';
 }
 
 /**

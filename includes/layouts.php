@@ -86,7 +86,7 @@ function add_new_entry_block( $echo = false ) {
 				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-input-button lw-woo-gdpr-user-optins-field-add-new-button">';
 
 					// The button.
-					$field .= '<button type="submit" class="button button-secondary button-small" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
+					$field .= '<button type="submit" class="button button-secondary button-small lw-woo-gdpr-user-optin-add-new-button" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
 
 					// Include a nonce.
 					$field .= wp_nonce_field( 'lw_woo_gdpr_new_optin_action', 'lw_woo_gdpr_new_optin_nonce', true, false );
@@ -121,13 +121,18 @@ function add_new_entry_block( $echo = false ) {
  */
 function table_row( $args = array(), $echo = false ) {
 
+	// Bail without the args.
+	if ( empty( $args ) || empty( $args['id'] ) ) {
+		return false;
+	}
+
 	// Create my name field and confirm the action name.
 	$name   = 'lw-woo-gdpr-user-optins-current[' . esc_attr( $args['id'] ) . ']';
 	$check  = ! empty( $args['required'] ) ? true : false;
 	$action = ! empty( $args['action'] ) ? $args['action'] : Helpers\make_action_key( $args['id'] );
 
 	// Set our delete link.
-	$d_nonc = wp_create_nonce( 'lw_woo_optin_single_' . esc_attr( $args['id'] )  );
+	$d_nonc = wp_create_nonce( 'lw_woo_gdpr_user_optin_single_' . esc_attr( $args['id'] )  );
 	$d_args = array( 'lw-woo-gdpr-user-optin-single-delete' => 1, 'field-id' => esc_attr( $args['id'] ), 'nonce' => $d_nonc );
 	$delete = add_query_arg( $d_args, Helpers\get_settings_tab_link() );
 

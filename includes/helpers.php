@@ -32,7 +32,16 @@ function notice_text( $code = '' ) {
 			return __( 'Your new settings have been updated.', 'lw-woo-gdpr-user-optins' );
 			break;
 
+		case 'success-sorted' :
+			return __( 'Your field sort order has been saved.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'success-added' :
+			return __( 'Your new field has been added.', 'lw-woo-gdpr-user-optins' );
+			break;
+
 		case 'success-general' :
+		case 'success' :
 			return __( 'Success! Your request has been processed.', 'lw-woo-gdpr-user-optins' );
 			break;
 
@@ -58,6 +67,22 @@ function notice_text( $code = '' ) {
 
 		case 'missing-label' :
 			return __( 'The label field is required.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'no-field-ids' :
+			return __( 'The field IDs required for sorting could not be determined.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'bad-merge' :
+			return __( 'The new field could not be added correctly.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'no-markup' :
+			return __( 'The new field display could not be added.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'not-removed' :
+			return __( 'There was an error removing the field.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'no-user' :
@@ -174,6 +199,27 @@ function get_current_optin_fields() {
 
 	// Return the fields, or the defaults.
 	return ! empty( $fields ) ? $fields : get_default_fields();
+}
+
+/**
+ * Take an array key for the fields and return that data.
+ *
+ * @param  string $key     The key inside the data array we want.
+ *
+ * @return mixed           Array if field is found, false otherwise.
+ */
+function get_single_optin_data( $key = '' ) {
+
+	// Fetch all the fields.
+	$fields = get_current_optin_fields();
+
+	// Bail if no fields exist.
+	if ( empty( $fields ) ) {
+		return false;
+	}
+
+	// Return that field if it exists, or false.
+	return isset( $fields[ $key ] ) ? $fields[ $key ] : false;
 }
 
 /**
@@ -528,4 +574,30 @@ function maybe_field_required( $key = '', $fields = array() ) {
 
 	// Now check the specific field array data.
 	return ! empty( $field['required'] ) ? true : false;
+}
+
+/**
+ * Check our various constants on an Ajax call.
+ *
+ * @return boolean
+ */
+function check_ajax_constants() {
+
+	// Check for a REST API request.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return false;
+	}
+
+	// Check for running an autosave.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return false;
+	}
+
+	// Check for running a cron, unless we've skipped that.
+	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		return false;
+	}
+
+	// We hit none of the checks, so proceed.
+	return true;
 }
