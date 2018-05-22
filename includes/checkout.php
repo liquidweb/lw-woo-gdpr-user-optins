@@ -102,7 +102,7 @@ function validate_optin_fields( $data, $errors ) {
 	foreach ( $fields as $key => $field ) {
 
 		// If it isn't a required field, skip it.
-		if ( empty( $field['required'] ) ) {
+		if ( ! Helpers\maybe_field_required( $key, $fields ) ) {
 			continue;
 		}
 

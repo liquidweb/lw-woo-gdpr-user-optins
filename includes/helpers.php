@@ -69,11 +69,14 @@ function notice_text( $code = '' ) {
 			return __( 'There was an unknown error with your request.', 'lw-woo-gdpr-user-optins' );
 			break;
 
-		default :
-			return __( 'There was an error with your request.', 'lw-woo-gdpr-user-optins' );
-
 		// End all case breaks.
 	}
+
+	// Set a default text.
+	$msgtxt = __( 'There was an error with your request.', 'lw-woo-gdpr-user-optins' );
+
+	// Return it with a filter
+	return apply_filters( 'lw_woo_gdpr_optins_default_fields', $msgtxt, $code );
 }
 
 /**
@@ -495,4 +498,34 @@ function maybe_account_endpoint_page( $in_query = false ) {
 
 	// Return if we are on our specific var or not.
 	return isset( $wp_query->query_vars[ LWWOOGDPR_OPTINS_FRONT_VAR ] ) ? true : false;
+}
+
+/**
+ * Check if a specific field is required.
+ *
+ * @param  string $key     The array key from the dataset.
+ * @param  array  $fields  Our array of fields (if already available).
+ *
+ * @return boolean
+ */
+function maybe_field_required( $key = '', $fields = array() ) {
+
+	// Make sure we have everything required.
+	if ( empty( $key ) ) {
+		return false;
+	}
+
+	// Get my fields.
+	$fields = ! empty( $fields ) ? $fields : get_current_optin_fields();
+
+	// Bail without my fields.
+	if ( empty( $fields ) || ! isset( $fields[ $key ] ) ) {
+		return false;
+	}
+
+	// Set my single field.
+	$field  = $fields[ $key ];
+
+	// Now check the specific field array data.
+	return ! empty( $field['required'] ) ? true : false;
 }

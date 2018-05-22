@@ -3,4 +3,5 @@ A toolset to allow WooCommerce store owners to create and manage user opt-in dat
 
 
 ### To Do
+* enforce required opt-in on required on account page
 * this readme file, clearly.
