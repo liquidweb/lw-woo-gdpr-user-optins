@@ -36,6 +36,7 @@ require_once __DIR__ . '/includes/query-mods.php';
 require_once __DIR__ . '/includes/layouts.php';
 require_once __DIR__ . '/includes/account.php';
 require_once __DIR__ . '/includes/checkout.php';
+require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/settings-tab.php';
 require_once __DIR__ . '/includes/ajax-actions.php';
 

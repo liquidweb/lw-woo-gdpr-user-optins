@@ -15,10 +15,26 @@
     width: 170px; }
   .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-label {
     width: 500px; }
+  .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-new-success {
+    margin: 0 0 0 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 1; }
+    .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-new-success .dashicons {
+      width: 24px;
+      height: 24px;
+      font-size: 24px;
+      color: #4f8a10; }
+  .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-hidden {
+    display: none;
+    visibility: hidden; }
 
-.lw-woo-gdpr-user-optins-list-table-wrap .lw-woo-gdpr-user-optins-field-hook input.code {
-  padding-top: 3px;
-  line-height: 17px; }
+.lw-woo-gdpr-user-optins-list-table-wrap .lw-woo-gdpr-user-optins-field-hook {
+  width: 300px; }
+  .lw-woo-gdpr-user-optins-list-table-wrap .lw-woo-gdpr-user-optins-field-hook input.code {
+    padding-top: 3px;
+    line-height: 17px; }
 .lw-woo-gdpr-user-optins-list-table-wrap .lw-woo-gdpr-user-optins-field-trigger {
   width: 60px;
   text-align: center; }

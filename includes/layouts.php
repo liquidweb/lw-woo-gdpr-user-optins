@@ -9,6 +9,66 @@ namespace LiquidWeb\WooGDPRUserOptIns\Layouts;
 
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 
+/**
+ * Build the markup for an admin notice.
+ *
+ * @param  string  $message  The actual message to display.
+ * @param  string  $type     Which type of message it is.
+ * @param  boolean $echo     Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+/**
+ * Build the markup for an admin notice.
+ *
+ * @param  string  $message      The actual message to display.
+ * @param  string  $type         Which type of message it is.
+ * @param  boolean $dismiss      Whether it should be dismissable.
+ * @param  boolean $show_button  Show the dismiss button (for Ajax calls).
+ * @param  boolean $echo         Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+function admin_message_markup( $message = '', $type = 'error', $dismiss = true, $show_button = false, $echo = false ) {
+
+	// Bail without the required message text.
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	// Set my base class.
+	$class  = 'notice notice-' . esc_attr( $type ) . ' lw-woo-gdpr-user-optins-admin-message';
+
+	// Add the dismiss class.
+	if ( $dismiss ) {
+		$class .= ' is-dismissible';
+	}
+
+	// Set an empty.
+	$field  = '';
+
+	// Start the notice markup.
+	$field .= '<div class="' . esc_attr( $class ) . '">';
+
+		// Display the actual message.
+		$field .= '<p><strong>' . wp_kses_post( $message ) . '</strong></p>';
+
+		// Show the button if we set dismiss and button variables.
+		if ( $dismiss && $show_button ) {
+			$field .= '<button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_html__( 'Dismiss this notice.', 'lw-woo-gdpr-user-optins' ) . '</span></button>';
+		}
+
+	// And close the div.
+	$field .= '</div>';
+
+	// Echo it if requested.
+	if ( ! empty( $echo ) ) {
+		echo $field;
+	}
+
+	// Just return it.
+	return $field;
+}
 
 /**
  * The individual new entry field.
@@ -87,6 +147,11 @@ function add_new_entry_block( $echo = false ) {
 
 					// The button.
 					$field .= '<button type="submit" class="button button-secondary button-small lw-woo-gdpr-user-optin-add-new-button" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
+
+					// Include the checkmark that will show and hide when adding a new field.
+					$field .= '<span class="lw-woo-gdpr-user-optins-field-new-success lw-woo-gdpr-user-optins-field-hidden hide-if-no-js">';
+						$field .= '<i class="dashicons dashicons-yes"></i>';
+					$field .= '</span>';
 
 					// Include a nonce.
 					$field .= wp_nonce_field( 'lw_woo_gdpr_new_optin_action', 'lw_woo_gdpr_new_optin_nonce', true, false );
@@ -184,7 +249,7 @@ function table_row( $args = array(), $echo = false ) {
 			$field .= '</a>';
 
 			// Handle the sort trigger.
-			$field .= '<span class="lw-woo-gdpr-user-optins-field-trigger-item lw-woo-gdpr-user-optins-field-trigger-sort hide-if-no-js" href="">';
+			$field .= '<span class="lw-woo-gdpr-user-optins-field-trigger-item lw-woo-gdpr-user-optins-field-trigger-sort hide-if-no-js">';
 				$field .= '<i class="lw-woo-gdpr-user-optins-field-trigger-icon dashicons dashicons-sort"></i>';
 			$field .= '</span>';
 

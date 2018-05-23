@@ -577,6 +577,34 @@ function maybe_field_required( $key = '', $fields = array() ) {
 }
 
 /**
+ * Check if we are on the admin settings tab.
+ *
+ * @param  string $hook  Optional hook sent from some actions.
+ *
+ * @return boolean
+ */
+function maybe_admin_settings_tab( $hook = '' ) {
+
+	// Can't be the admin tab if we aren't admin.
+	if ( ! is_admin() ) {
+		return false;
+	}
+
+	// Check the hook if we passed one.
+	if ( ! empty( $hook ) && 'woocommerce_page_wc-settings' !== esc_attr( $hook ) ) {
+		return false;
+	}
+
+	// Check the tab portion.
+	if ( empty( $_GET['tab'] ) || LWWOOGDPR_OPTINS_TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
+		return false;
+	}
+
+	// Passed everything, so return true.
+	return true;
+}
+
+/**
  * Check our various constants on an Ajax call.
  *
  * @return boolean

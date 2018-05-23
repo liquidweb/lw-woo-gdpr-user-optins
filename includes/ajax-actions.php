@@ -86,8 +86,8 @@ function add_new_optin_row() {
 	}
 
 	// Check for the specific action.
-	if ( empty( $_POST['action'] ) || 'lw_woo_add_new_optin_row' !== sanitize_text_field( $_POST['action'] ) ) {
-		return false;
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_add_new' !== sanitize_text_field( $_POST['action'] ) ) {
+		return;
 	}
 
 	// Check to see if our nonce was provided.
@@ -165,7 +165,7 @@ function delete_single_row() {
 
 	// Check for the specific action.
 	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_delete_row' !== sanitize_text_field( $_POST['action'] ) ) {
-		return false;
+		return;
 	}
 
 	// Check to see if our nonce was provided.
@@ -214,10 +214,14 @@ function delete_single_row() {
  */
 function send_admin_ajax_error( $errcode = '' ) {
 
+	// Get my message text.
+	$msgtxt = Helpers\notice_text( $errcode );
+
 	// Build our return.
 	$return = array(
 		'errcode' => $errcode,
-		'message' => Helpers\notice_text( $errcode ),
+		'message' => $msgtxt,
+		'notice'  => Layouts\admin_message_markup( $msgtxt, 'error', true, true ),
 	);
 
 	// And handle my JSON return.
