@@ -49,6 +49,11 @@ function save_user_optins() {
 	// Determine if we have opt-in choices.
 	$items  = ! empty( $_POST['optins'] ) ? array_filter( (array) $_POST['optins'], 'sanitize_text_field' ) : array();
 
+	// Run our validation checks.
+	if ( ! Helpers\confirm_required_fields( $items ) ) {
+		send_ajax_error_response( 'missing-required-field', 'account' );
+	}
+
 	// Run the update.
 	$update = Helpers\update_user_optins( absint( $_POST['user_id'] ), null, $items, false );
 

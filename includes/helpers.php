@@ -97,6 +97,10 @@ function notice_text( $code = '' ) {
 			return __( 'Your opt-in selections could not be updated.', 'lw-woo-gdpr-user-optins' );
 			break;
 
+		case 'missing-required-field' :
+			return __( 'Please review all the required fields.', 'lw-woo-gdpr-user-optins' );
+			break;
+
 		case 'unknown' :
 		case 'unknown-error' :
 			return __( 'There was an unknown error with your request.', 'lw-woo-gdpr-user-optins' );
@@ -207,6 +211,34 @@ function get_current_optin_fields() {
 
 	// Return the fields, or the defaults.
 	return ! empty( $fields ) ? $fields : get_default_fields();
+}
+
+/**
+ * Get our required saved fields.
+ *
+ * @return array
+ */
+function get_required_optin_fields() {
+
+	// Fetch my existing fields.
+	$fields = get_current_optin_fields();
+
+	// Bail without my fields.
+	if ( empty( $fields ) ) {
+		return;
+	}
+
+	// Now loop my fields.
+	foreach ( $fields as $key => $field ) {
+
+		// If it isn't a required field, unset it.
+		if ( ! maybe_field_required( $key, $fields ) ) {
+			unset( $fields[ $key ] );
+		}
+	}
+
+	// Return what's left.
+	return ! empty( $fields ) ? $fields : array();
 }
 
 /**
@@ -636,4 +668,42 @@ function check_ajax_constants() {
 
 	// We hit none of the checks, so proceed.
 	return true;
+}
+
+/**
+ * Confirm the user has selected all that are required.
+ *
+ * @param  array  $items  The items the user has selected.
+ *
+ * @return boolean
+ */
+function confirm_required_fields( $items = array() ) {
+
+	// Fetch my required fields.
+	$fields = get_required_optin_fields();
+
+	// If no required fields exist, we're OK.
+	if ( empty( $fields ) ) {
+		return true;
+	}
+
+	// Set my initial flag.
+	$valid  = true;
+
+	// Now loop my fields.
+	foreach ( $fields as $key => $field ) {
+
+		// If we have the required opt-in, skip it.
+		if ( ! in_array( $key, $items ) ) {
+
+			// Set my valid to false.
+			$valid  = false;
+
+			// And be done.
+			break;
+		}
+	}
+
+	// Return the result.
+	return $valid;
 }

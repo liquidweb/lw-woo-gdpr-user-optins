@@ -54,8 +54,21 @@ function check_user_optin_changes() {
 	// Filter my field args getting passed.
 	$field_args = empty( $_POST['lw_woo_gdpr_user_optins_items'] ) ? array() : array_filter( $_POST['lw_woo_gdpr_user_optins_items'], 'sanitize_text_field' );
 
+	// Run our validation checks.
+	if ( ! Helpers\confirm_required_fields( array_keys( $field_args ) ) ) {
+
+		// Set up our redirect args.
+		$setup  = array( 'success' => 0, 'lw-woo-gdpr-action' => 1, 'errcode' => 'missing-required-field' );
+
+		// Redirect with our error code.
+		Helpers\account_page_redirect( $setup );
+	}
+
 	// Attempt to update the settings.
-	if ( ! Helpers\update_user_optins( $user_id, null, $field_args ) ) {
+	$update = Helpers\update_user_optins( $user_id, null, $field_args );
+
+	// Make sure it came back OK.
+	if ( ! $update ) {
 
 		// Set up our redirect args.
 		$setup  = array( 'success' => 0, 'lw-woo-gdpr-action' => 1, 'errcode' => 'update-error' );
@@ -124,14 +137,17 @@ function add_endpoint_notices() {
 		return;
 	}
 
+	// Check for a response code.
+	$msg_code   = ! empty( $_GET['errcode'] ) ? sanitize_text_field( $_GET['errcode'] ) : 'unknown';
+
 	// Figure out the text.
-	$msg_text   = ! empty( $_GET['message'] ) ? sanitize_text_field( $_GET['message'] ) : Helpers\notice_text( 'unknown' );
+	$msg_text   = ! empty( $_GET['message'] ) ? sanitize_text_field( $_GET['message'] ) : Helpers\notice_text( $msg_code );
 
 	// Determine the message type.
 	$msg_type   = empty( $_GET['success'] ) ? 'error' : 'success';
 
 	// Output the message.
-	Layouts\account_message_markup( $msg_text, $msg_type, true );
+	echo Layouts\account_message_markup( $msg_text, $msg_type, true, false );
 }
 
 /**

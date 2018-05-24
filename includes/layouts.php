@@ -305,7 +305,6 @@ function optin_status_list( $user_id = 0, $echo = false ) {
 		$new_field_args = array(
 			'name'      => 'lw_woo_gdpr_user_optins_items[' . esc_attr( $field['id'] ) . ']',
 			'label'     => wp_kses_post( $label ),
-			'required'  => false,
 			'checked'   => $check,
 		);
 
