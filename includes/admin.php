@@ -16,6 +16,7 @@ use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 add_action( 'admin_notices', __NAMESPACE__ . '\display_admin_notices' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\load_settings_assets' );
 add_filter( 'admin_body_class', __NAMESPACE__ . '\load_admin_body_class' );
+add_filter( 'plugin_action_links', __NAMESPACE__ . '\quick_link', 10, 2 );
 
 /**
  * Set up the admin notices.
@@ -107,4 +108,45 @@ function load_admin_body_class( $classes ) {
 
 	// And send back the string.
 	return $classes;
+}
+
+/**
+ * Add our "settings" links to the plugins page.
+ *
+ * @param  array  $links  The existing array of links.
+ * @param  string $file   The file we are actually loading from.
+ *
+ * @return array  $links  The updated array of links.
+ */
+function quick_link( $links, $file ) {
+
+	// Bail without caps.
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return $links;
+	}
+
+	// Set the static var.
+	static $this_plugin;
+
+	// Check the base if we aren't paired up.
+	if ( ! $this_plugin ) {
+		$this_plugin = LWWOOGDPR_OPTINS_BASE;
+	}
+
+	// Check to make sure we are on the correct plugin.
+	if ( $file != $this_plugin ) {
+		return $links;
+	}
+
+	// Fetch our settings link.
+	$link   = Helpers\get_settings_tab_link();
+
+	// Now create the link markup.
+	$setup  = '<a href="' . esc_url( $link ) . ' ">' . __( 'Settings', 'lw-woo-gdpr-user-optins' ) . '</a>';
+
+	// Add it to the array.
+	array_unshift( $links, $setup );
+
+	// Return the resulting array.
+	return $links;
 }

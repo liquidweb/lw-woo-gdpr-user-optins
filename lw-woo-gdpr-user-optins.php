@@ -46,6 +46,11 @@ require_once __DIR__ . '/includes/ajax-actions.php';
  */
 function set_constants() {
 
+	// Define our file base.
+	if ( ! defined( 'LWWOOGDPR_OPTINS_BASE' ) ) {
+		define( 'LWWOOGDPR_OPTINS_BASE', plugin_basename( __FILE__ ) );
+	}
+
 	// Plugin Folder URL.
 	if ( ! defined( 'LWWOOGDPR_OPTINS_URL' ) ) {
 		define( 'LWWOOGDPR_OPTINS_URL', plugin_dir_url( __FILE__ ) );
