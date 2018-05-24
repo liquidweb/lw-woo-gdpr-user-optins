@@ -206,7 +206,7 @@ jQuery(document).ready( function($) {
 					return false;
 				}
 
-				// No error, so remove the field
+				// No error, so remove the field.
 				if ( response.success === true || response.success === 'true' ) {
 
 					// Fade out the field and then remove it.

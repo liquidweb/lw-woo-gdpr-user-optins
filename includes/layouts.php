@@ -10,67 +10,6 @@ namespace LiquidWeb\WooGDPRUserOptIns\Layouts;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 
 /**
- * Build the markup for an admin notice.
- *
- * @param  string  $message  The actual message to display.
- * @param  string  $type     Which type of message it is.
- * @param  boolean $echo     Whether to echo out the markup or return it.
- *
- * @return HTML
- */
-/**
- * Build the markup for an admin notice.
- *
- * @param  string  $message      The actual message to display.
- * @param  string  $type         Which type of message it is.
- * @param  boolean $dismiss      Whether it should be dismissable.
- * @param  boolean $show_button  Show the dismiss button (for Ajax calls).
- * @param  boolean $echo         Whether to echo out the markup or return it.
- *
- * @return HTML
- */
-function admin_message_markup( $message = '', $type = 'error', $dismiss = true, $show_button = false, $echo = false ) {
-
-	// Bail without the required message text.
-	if ( empty( $message ) ) {
-		return;
-	}
-
-	// Set my base class.
-	$class  = 'notice notice-' . esc_attr( $type ) . ' lw-woo-gdpr-user-optins-admin-message';
-
-	// Add the dismiss class.
-	if ( $dismiss ) {
-		$class .= ' is-dismissible';
-	}
-
-	// Set an empty.
-	$field  = '';
-
-	// Start the notice markup.
-	$field .= '<div class="' . esc_attr( $class ) . '">';
-
-		// Display the actual message.
-		$field .= '<p><strong>' . wp_kses_post( $message ) . '</strong></p>';
-
-		// Show the button if we set dismiss and button variables.
-		if ( $dismiss && $show_button ) {
-			$field .= '<button type="button" class="notice-dismiss"><span class="screen-reader-text">' . esc_html__( 'Dismiss this notice.', 'lw-woo-gdpr-user-optins' ) . '</span></button>';
-		}
-
-	// And close the div.
-	$field .= '</div>';
-
-	// Echo it if requested.
-	if ( ! empty( $echo ) ) {
-		echo $field;
-	}
-
-	// Just return it.
-	return $field;
-}
-
-/**
  * The individual new entry field.
  *
  * @param  boolean $echo  Whether to echo out the markup or return it.
@@ -275,13 +214,13 @@ function table_row( $args = array(), $echo = false ) {
  *
  * @return HTML
  */
-function user_optin_statuses( $user_id = 0, $echo = false ) {
+function optin_status_display_form( $user_id = 0, $echo = false ) {
 
-	// Fetch my existing fields.
-	$fields = Helpers\get_current_optin_fields();
+	// Fetch my list of optins.
+	$user_list  = optin_status_list( $user_id );
 
-	// Bail without my fields.
-	if ( empty( $fields ) ) {
+	// Bail without my list.
+	if ( ! $user_list ) {
 		return;
 	}
 
@@ -298,7 +237,7 @@ function user_optin_statuses( $user_id = 0, $echo = false ) {
 	$build .= '<form class="lw-woo-gdpr-user-optins-change-form" action="" method="post">';
 
 		// Display our list of items.
-		$build .= optin_status_list( $fields, $user_id );
+		$build .= $user_list;
 
 		// Open the paragraph for the submit button.
 		$build .= '<p class="lw-woo-gdpr-user-optins-change-submit">';
@@ -335,11 +274,14 @@ function user_optin_statuses( $user_id = 0, $echo = false ) {
  *
  * @return HTML
  */
-function optin_status_list( $fields = array(), $user_id = 0, $echo = false ) {
+function optin_status_list( $user_id = 0, $echo = false ) {
+
+	// Fetch my existing fields.
+	$fields = Helpers\get_current_optin_fields();
 
 	// Bail without fields or a user ID.
 	if ( empty( $fields ) || empty( $user_id ) ) {
-		return;
+		return false;
 	}
 
 	// Set our empty.
@@ -458,4 +400,113 @@ function single_checkbox_field( $args = array(), $echo = false ) {
 
 	// Just return it.
 	return $field;
+}
+
+/**
+ * Build the markup for an admin notice.
+ *
+ * @param  string  $message      The actual message to display.
+ * @param  string  $type         Which type of message it is.
+ * @param  boolean $dismiss      Whether it should be dismissable.
+ * @param  boolean $show_button  Show the dismiss button (for Ajax calls).
+ * @param  boolean $echo         Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+function admin_message_markup( $message = '', $type = 'error', $dismiss = true, $show_button = false, $echo = false ) {
+
+	// Bail without the required message text.
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	// Set my base class.
+	$class  = 'notice notice-' . esc_attr( $type ) . ' lw-woo-gdpr-user-optins-admin-message';
+
+	// Add the dismiss class.
+	if ( $dismiss ) {
+		$class .= ' is-dismissible';
+	}
+
+	// Set an empty.
+	$field  = '';
+
+	// Start the notice markup.
+	$field .= '<div class="' . esc_attr( $class ) . '">';
+
+		// Display the actual message.
+		$field .= '<p><strong>' . wp_kses_post( $message ) . '</strong></p>';
+
+		// Show the button if we set dismiss and button variables.
+		if ( $dismiss && $show_button ) {
+			$field .= '<button type="button" class="notice-dismiss">' . screen_reader_text() . '</button>';
+		}
+
+	// And close the div.
+	$field .= '</div>';
+
+	// Echo it if requested.
+	if ( ! empty( $echo ) ) {
+		echo $field;
+	}
+
+	// Just return it.
+	return $field;
+}
+
+/**
+ * Build the markup for an account page notice.
+ *
+ * @param  string  $message      The actual message to display.
+ * @param  string  $type         Which type of message it is.
+ * @param  boolean $echo         Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+function account_message_markup( $message = '', $type = 'error', $wrap = false, $echo = false ) {
+
+	// Bail without the required message text.
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	// Get my dismiss link.
+	$dslink = Helpers\get_account_tab_link();
+
+	// Set an empty.
+	$field  = '';
+
+	// Start the notice markup.
+	$field .= '<div class="lw-woo-gdpr-user-optins-notice lw-woo-gdpr-user-optins-notice-' . esc_attr( $type ) . '">';
+
+		// Display the actual message.
+		$field .= '<p>' . wp_kses_post( $message ) . '</p>';
+
+		// And our dismissal button.
+		$field .= '<a class="lw-woo-gdpr-user-optins-notice-dismiss" href="' . esc_url( $dslink ) . '">';
+			$field .= screen_reader_text() . '<i class="dashicons dashicons-no"></i>';
+		$field .= '</a>';
+
+	// And close the div.
+	$field .= '</div>';
+
+	// Add the optional wrapper.
+	$build  = ! $wrap ? $field : '<div class="lw-woo-gdpr-user-optins-account-notices">' . $field . '</div>';
+
+	// Echo it if requested.
+	if ( ! empty( $echo ) ) {
+		echo $build;
+	}
+
+	// Just return it.
+	return $build;
+}
+
+/**
+ * Set the markup for the screen reader text on dismiss.
+ *
+ * @return HTML
+ */
+function screen_reader_text() {
+	return '<span class="screen-reader-text">' . esc_html__( 'Dismiss this notice.', 'lw-woo-gdpr-user-optins' ) . '</span>';
 }

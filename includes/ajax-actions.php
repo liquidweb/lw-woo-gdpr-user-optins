@@ -13,9 +13,64 @@ use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 /**
  * Start our engines.
  */
+add_action( 'wp_ajax_lw_woo_gdpr_save_user_optins', __NAMESPACE__ . '\save_user_optins' );
 add_action( 'wp_ajax_lw_woo_gdpr_optins_sort', __NAMESPACE__ . '\update_sorted_rows' );
 add_action( 'wp_ajax_lw_woo_gdpr_optins_add_new', __NAMESPACE__ . '\add_new_optin_row' );
 add_action( 'wp_ajax_lw_woo_gdpr_optins_delete_row', __NAMESPACE__ . '\delete_single_row' );
+
+
+/**
+ * Update our user opt-in values.
+ *
+ * @return mixed
+ */
+function save_user_optins() {
+
+	// Check our various constants.
+	if ( ! Helpers\check_ajax_constants() ) {
+		return;
+	}
+
+	// Check for the specific action.
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_save_user_optins' !== sanitize_text_field( $_POST['action'] ) ) {
+		return;
+	}
+
+	// Check to see if our nonce was provided.
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'lw_woo_gdpr_user_optins_change_action' ) ) {
+		send_ajax_error_response( 'invalid-nonce', 'account' );
+	}
+
+	// Check for the user ID field.
+	if ( empty( $_POST['user_id'] ) ) {
+		send_ajax_error_response( 'no-user-id', 'account' );
+	}
+
+	// Determine if we have opt-in choices.
+	$items  = ! empty( $_POST['optins'] ) ? array_filter( (array) $_POST['optins'], 'sanitize_text_field' ) : array();
+
+	// Run the update.
+	$update = Helpers\update_user_optins( absint( $_POST['user_id'] ), null, $items, false );
+
+	// Make sure it came back OK.
+	if ( ! $update ) {
+		send_ajax_error_response( 'user-update-failed', 'account' );
+	}
+
+	// Get my message text.
+	$msgtxt = Helpers\notice_text( 'success-change-opts' );
+
+	// Build our return.
+	$return = array(
+		'errcode' => null,
+		'markup'  => Layouts\optin_status_list( absint( $_POST['user_id'] ) ),
+		'message' => $msgtxt,
+		'notice'  => Layouts\account_message_markup( $msgtxt, 'success', false ),
+	);
+
+	// And handle my JSON return.
+	wp_send_json_success( $return );
+}
 
 /**
  * Update our stored away with the new sort.
@@ -41,7 +96,7 @@ function update_sorted_rows() {
 
 	// Check to see if our sorted data was provided.
 	if ( empty( $_POST['sorted'] ) ) {
-		send_admin_ajax_error( 'no-field-ids' );
+		send_ajax_error_response( 'no-field-ids' );
 	}
 
 	// Filter my field keys.
@@ -92,17 +147,17 @@ function add_new_optin_row() {
 
 	// Check to see if our nonce was provided.
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'lw_woo_gdpr_new_optin_action' ) ) {
-		send_admin_ajax_error( 'invalid-nonce' );
+		send_ajax_error_response( 'invalid-nonce' );
 	}
 
 	// Check for the title field.
 	if ( empty( $_POST['title'] ) ) {
-		send_admin_ajax_error( 'missing-title' );
+		send_ajax_error_response( 'missing-title' );
 	}
 
 	// Check for the label field.
 	if ( empty( $_POST['label'] ) ) {
-		send_admin_ajax_error( 'missing-label' );
+		send_ajax_error_response( 'missing-label' );
 	}
 
 	// Set my ID, since we use it a few places.
@@ -121,7 +176,7 @@ function add_new_optin_row() {
 
 	// Make sure it came back OK.
 	if ( ! $update ) {
-		send_admin_ajax_error( 'bad-merge' );
+		send_ajax_error_response( 'bad-merge' );
 	}
 
 	// Update our option. // no idea how to use woocommerce_update_options();
@@ -132,7 +187,7 @@ function add_new_optin_row() {
 
 	// Send an error back if we have no markup.
 	if ( ! $markup ) {
-		send_admin_ajax_error( 'no-markup' );
+		send_ajax_error_response( 'no-markup' );
 	}
 
 	// Build our return.
@@ -170,12 +225,12 @@ function delete_single_row() {
 
 	// Check to see if our nonce was provided.
 	if ( empty( $_POST['nonce'] ) ) {
-		send_admin_ajax_error( 'missing-nonce' );
+		send_ajax_error_response( 'missing-nonce' );
 	}
 
 	// Check to see if our field ID was provided.
 	if ( empty( $_POST['field_id'] ) ) {
-		send_admin_ajax_error( 'bad-field-id' );
+		send_ajax_error_response( 'bad-field-id' );
 	}
 
 	// Set my field ID and nonce key.
@@ -184,7 +239,7 @@ function delete_single_row() {
 
 	// Check to see if our nonce failed.
 	if ( ! wp_verify_nonce( $_POST['nonce'], $noncekey ) ) {
-		send_admin_ajax_error( 'bad-nonce' );
+		send_ajax_error_response( 'bad-nonce' );
 	}
 
 	// Run the removal.
@@ -192,7 +247,7 @@ function delete_single_row() {
 
 	// Confirm it came back OK.
 	if ( ! $remove ) {
-		send_admin_ajax_error( 'not-removed' );
+		send_ajax_error_response( 'not-removed' );
 	}
 
 	// Build our return.
@@ -208,20 +263,24 @@ function delete_single_row() {
 /**
  * Build and process our Ajax error handler.
  *
- * @param  string $errcode  The error code in question.
+ * @param  string $errcode   The error code in question.
+ * @param  string $location  Where the notice is being displayed.
  *
- * @return void
+ * @return array
  */
-function send_admin_ajax_error( $errcode = '' ) {
+function send_ajax_error_response( $errcode = '', $location = 'admin' ) {
 
 	// Get my message text.
 	$msgtxt = Helpers\notice_text( $errcode );
+
+	// Get my notice markup.
+	$notice = 'account' === sanitize_text_field( $location ) ? Layouts\account_message_markup( $msgtxt ) : Layouts\admin_message_markup( $msgtxt, 'error', true, true );
 
 	// Build our return.
 	$return = array(
 		'errcode' => $errcode,
 		'message' => $msgtxt,
-		'notice'  => Layouts\admin_message_markup( $msgtxt, 'error', true, true ),
+		'notice'  => $notice
 	);
 
 	// And handle my JSON return.

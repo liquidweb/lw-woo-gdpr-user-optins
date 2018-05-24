@@ -28,16 +28,16 @@ function notice_text( $code = '' ) {
 			return __( 'The opt-in field has been successfully deleted.', 'lw-woo-gdpr-user-optins' );
 			break;
 
-		case 'success-change-opts' :
-			return __( 'Your new settings have been updated.', 'lw-woo-gdpr-user-optins' );
-			break;
-
 		case 'success-sorted' :
 			return __( 'Your field sort order has been saved.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'success-added' :
 			return __( 'Your new field has been added.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'success-change-opts' :
+			return __( 'Your opt-in selections have been updated.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'success-general' :
@@ -85,8 +85,16 @@ function notice_text( $code = '' ) {
 			return __( 'There was an error removing the field.', 'lw-woo-gdpr-user-optins' );
 			break;
 
+		case 'no-user-id' :
+			return __( 'The required user ID was not provided.', 'lw-woo-gdpr-user-optins' );
+			break;
+
 		case 'no-user' :
 			return __( 'The current user could not be determined.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'user-update-failed' :
+			return __( 'Your opt-in selections could not be updated.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'unknown' :
@@ -394,7 +402,7 @@ function update_user_optins( $user_id = 0, $customer, $data = array(), $use_keys
 			$action = sanitize_text_field( $field['action'] );
 
 			// And do the action.
-			do_action( $action, $field );
+			do_action( $action, $field, $user_id );
 		}
 	}
 
