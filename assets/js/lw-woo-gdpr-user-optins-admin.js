@@ -34,25 +34,23 @@ function clearNewFieldInputs( showIcon ) {
 }
 
 /**
+ * Set a fixed with on the table when sorting.
+ */
+function fixWidthHelper( e, ui ) {
+
+	// Map through the items to set up the width.
+	ui.children().map( function() {
+		jQuery( this ).width( jQuery( this ).width() );
+	});
+
+	// Return the resulting UI.
+	return ui;
+}
+
+/**
  * Now let's get started.
  */
-jQuery(document).ready( function($) {
-
-	/**
-	 * Quick helper to check for an existance of an element.
-	 */
-	$.fn.divExists = function(callback) {
-
-		// Slice some args.
-		var args = [].slice.call( arguments, 1 );
-
-		// Check for length.
-		if ( this.length ) {
-			callback.call( this, args );
-		}
-		// Return it.
-		return this;
-	};
+jQuery( document ).ready( function($) {
 
 	/**
 	 * Set some vars for later
@@ -67,11 +65,12 @@ jQuery(document).ready( function($) {
 	/**
 	 * Set up the sortable table rows.
 	 */
-	$( sortTable ).divExists( function() {
+	if ( sortTable.length > 0 ) {
 
 		// Make our table sortable.
 		$( sortBody ).sortable({
 			handle: '.lw-woo-gdpr-user-optins-field-trigger-icon',
+			helper: fixWidthHelper,
 			update: function( event, ui ) {
 
 				// Build the data structure for the call with the updated sort order.
@@ -84,10 +83,10 @@ jQuery(document).ready( function($) {
 				jQuery.post( ajaxurl, data );
 			},
 		});
-	});
+	}
 
 	// Don't even think about running this anywhere else.
-	$( tabBody ).divExists( function() {
+	if ( $( 'body.lw-woo-gdpr-user-optins-admin-tab' ).length > 0 ) {
 
 		/**
 		 * Set the button variable to handle the two submits.
@@ -224,8 +223,7 @@ jQuery(document).ready( function($) {
 			$( tabBody ).find( '.lw-woo-gdpr-user-optins-admin-message' ).remove();
 		});
 
-
-	});
+	}
 
 //********************************************************
 // You're still here? It's over. Go home.
