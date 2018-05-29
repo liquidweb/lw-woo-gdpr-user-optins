@@ -29,7 +29,7 @@ jQuery(document).ready( function($) {
 		$( '.lw-woo-gdpr-user-optins-account-notices' ).find( '.lw-woo-gdpr-user-optins-notice' ).remove();
 
 		// Fetch the nonce.
-		var optsNonce   = $( 'input#lw_woo_gdpr_user_optins_change_nonce' ).val();
+		var optsNonce   = document.getElementById( 'lw_woo_gdpr_user_optins_change_nonce' ).value;
 
 		// Bail real quick without a nonce.
 		if ( '' === optsNonce || undefined === optsNonce ) {
@@ -44,7 +44,7 @@ jQuery(document).ready( function($) {
 		// Build the data structure for the call.
 		var data = {
 			action: 'lw_woo_gdpr_save_user_optins',
-			user_id: $( 'input#lw_woo_gdpr_user_optins_change_user_id' ).val(),
+			user_id: document.getElementById( 'lw_woo_gdpr_user_optins_change_user_id' ).value,
 			optins: optsChoices,
 			nonce: optsNonce
 		};
