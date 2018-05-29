@@ -45,8 +45,9 @@ function add_new_entry_block( $echo = false ) {
 					$field .= esc_html__( 'Label', 'lw-woo-gdpr-user-optins' );
 				$field .= '</th>';
 
-				// A spacer to align with the button.
-				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-add-new-button lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
+				// Add spacers to align with the button.
+				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-add-new-button lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
+				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
 
 			// Close the row.
 			$field .= '</tr>';
@@ -82,7 +83,7 @@ function add_new_entry_block( $echo = false ) {
 				$field .= '</td>';
 
 				// Add the button setup itself.
-				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-input-button lw-woo-gdpr-user-optins-field-add-new-button">';
+				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-input-button lw-woo-gdpr-user-optins-field-add-new-button">';
 
 					// The button.
 					$field .= '<button type="submit" class="button button-secondary button-small lw-woo-gdpr-user-optin-add-new-button" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
@@ -96,6 +97,9 @@ function add_new_entry_block( $echo = false ) {
 					$field .= wp_nonce_field( 'lw_woo_gdpr_new_optin_action', 'lw_woo_gdpr_new_optin_nonce', true, false );
 
 				$field .= '</td>';
+
+				// Add a blank table spacer, because tables.
+				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-add-new-button">&nbsp;</td>';
 
 			// Close the row.
 			$field .= '</tr>';
