@@ -184,7 +184,7 @@ function add_new_optin_row() {
 		send_ajax_error_response( 'bad-merge' );
 	}
 
-	// Update our option. // no idea how to use woocommerce_update_options();
+	// Update our option.
 	Helpers\update_saved_optin_fields( $update );
 
 	// Now attempt to get the table row.
