@@ -105,7 +105,7 @@ function update_sorted_rows() {
 	}
 
 	// Filter my field keys.
-	$keys   = array_filter( $_POST['sorted'], 'sanitize_text_field' );
+	$keys   = array_map( 'sanitize_text_field', $_POST['sorted'] );
 
 	// Set my new array variable.
 	$update = array();
