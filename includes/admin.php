@@ -39,7 +39,7 @@ function display_admin_notices() {
 	if ( ! empty( $_GET['success'] ) ) {
 
 		// Determine my error text.
-		$msg_code   = ! empty( $_GET['message'] ) ? esc_attr( $_GET['message'] ) : 'success';
+		$msg_code   = ! empty( $_GET['message'] ) ? sanitize_text_field( $_GET['message'] ) : 'success';
 		$msg_text   = Helpers\notice_text( $msg_code );
 
 		// Output the message along with the dismissable.
@@ -57,9 +57,6 @@ function display_admin_notices() {
 
 	// Output the message along with the dismissable.
 	echo Layouts\admin_message_markup( $error_text );
-
-	// And be done.
-	return;
 }
 
 /**
@@ -142,7 +139,7 @@ function quick_link( $links, $file ) {
 	$link   = Helpers\get_settings_tab_link();
 
 	// Now create the link markup.
-	$setup  = '<a href="' . esc_url( $link ) . ' ">' . __( 'Settings', 'lw-woo-gdpr-user-optins' ) . '</a>';
+	$setup  = '<a href="' . esc_url( $link ) . ' ">' . esc_html__( 'Settings', 'lw-woo-gdpr-user-optins' ) . '</a>';
 
 	// Add it to the array.
 	array_unshift( $links, $setup );
