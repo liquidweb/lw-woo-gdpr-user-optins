@@ -114,7 +114,7 @@ jQuery(document).ready( function($) {
 			$( '.woo-nav-tab-wrapper a' ).off();
 
 			// Fetch the nonce.
-			var newNonce = $( 'input#lw_woo_gdpr_new_optin_nonce' ).val();
+			var newNonce = document.getElementById( 'lw_woo_gdpr_new_optin_nonce' ).value;
 
 			// Bail real quick without a nonce.
 			if ( '' === newNonce || undefined === newNonce ) {
@@ -125,8 +125,8 @@ jQuery(document).ready( function($) {
 			var data = {
 				action: 'lw_woo_gdpr_optins_add_new',
 				required: $( 'input#lw-woo-gdpr-user-optin-required-new' ).is( ':checked' ),
-				title: $( 'input#lw-woo-gdpr-user-optin-title-new' ).val(),
-				label: $( 'input#lw-woo-gdpr-user-optin-label-new' ).val(),
+				title: document.getElementById( 'lw-woo-gdpr-user-optin-title-new' ).value,
+				label: document.getElementById( 'lw-woo-gdpr-user-optin-label-new' ).value,
 				nonce: newNonce
 			};
 
