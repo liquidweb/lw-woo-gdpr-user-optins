@@ -24,11 +24,11 @@ function clearNewFieldInputs( showIcon ) {
 		var iconCheck = jQuery( 'tr.lw-woo-gdpr-user-optins-new-fields-row span.lw-woo-gdpr-user-optins-field-new-success' );
 
 		// Remove the class.
-		jQuery( iconCheck ).removeClass( 'lw-woo-gdpr-user-optins-field-hidden' );
+		iconCheck.removeClass( 'lw-woo-gdpr-user-optins-field-hidden' );
 
 		// Then hide it again.
 		hideAgain = setTimeout( function() {
-			jQuery( iconCheck ).addClass( 'lw-woo-gdpr-user-optins-field-hidden' );
+			iconCheck.addClass( 'lw-woo-gdpr-user-optins-field-hidden' );
 		}, 3000 );
 	}
 }
