@@ -7,6 +7,7 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\SettingsTab;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 
@@ -31,8 +32,8 @@ add_action( 'woocommerce_admin_field_repeating_group', __NAMESPACE__ . '\output_
 function add_settings_tab( $tabs ) {
 
 	// Confirm we don't already have the tab.
-	if ( ! isset( $tabs[ LWWOOGDPR_OPTINS_TAB_BASE ] ) ) {
-		$tabs[ LWWOOGDPR_OPTINS_TAB_BASE ] = __( 'GDPR Opt-Ins', 'lw-woo-gdpr-user-optins' );
+	if ( ! isset( $tabs[ Core\TAB_BASE ] ) ) {
+		$tabs[ Core\TAB_BASE ] = __( 'GDPR Opt-Ins', 'lw-woo-gdpr-user-optins' );
 	}
 
 	// And return the entire array.
@@ -97,7 +98,7 @@ function remove_single_field() {
 	}
 
 	// Check the tab portion.
-	if ( empty( $_GET['tab'] ) || LWWOOGDPR_OPTINS_TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
+	if ( empty( $_GET['tab'] ) || Core\TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
 		return;
 	}
 

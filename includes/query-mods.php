@@ -7,6 +7,8 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\QueryMods;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
+
 /**
  * Start our engines.
  */
@@ -19,7 +21,7 @@ add_filter( 'query_vars', __NAMESPACE__ . '\add_account_endpoint_vars', 0 );
  * @see https://developer.wordpress.org/reference/functions/add_rewrite_endpoint/
  */
 function add_account_rewrite_endpoint() {
-	add_rewrite_endpoint( LWWOOGDPR_OPTINS_FRONT_VAR, EP_ROOT | EP_PAGES );
+	add_rewrite_endpoint( Core\FRONT_VAR, EP_ROOT | EP_PAGES );
 }
 
 /**
@@ -32,8 +34,8 @@ function add_account_rewrite_endpoint() {
 function add_account_endpoint_vars( $vars ) {
 
 	// Add our new endpoint var if we don't already have it.
-	if ( ! in_array( LWWOOGDPR_OPTINS_FRONT_VAR, $vars ) ) {
-		$vars[] = LWWOOGDPR_OPTINS_FRONT_VAR;
+	if ( ! in_array( Core\FRONT_VAR, $vars ) ) {
+		$vars[] = Core\FRONT_VAR;
 	}
 
 	// And return it.
