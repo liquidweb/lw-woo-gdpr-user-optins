@@ -7,6 +7,7 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\AccountPage;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 
@@ -103,13 +104,13 @@ function load_endpoint_assets() {
 	$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'lw-woo-gdpr-user-optins-front' : 'lw-woo-gdpr-user-optins-front.min';
 
 	// Set a version for whether or not we're debugging.
-	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : LWWOOGDPR_OPTINS_VERS;
+	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : Core\VERS;
 
 	// Load our CSS file.
-	wp_enqueue_style( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
+	wp_enqueue_style( $handle, Core\ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
 
 	// And our JS.
-	wp_enqueue_script( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
+	wp_enqueue_script( $handle, Core\ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
 	wp_localize_script( $handle, 'frontWooUserGDPR',
 		array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) )
 	);
@@ -187,7 +188,7 @@ function add_endpoint_menu_item( $items ) {
 	$title  = apply_filters( 'lw_woo_gdpr_user_optins_endpoint_menu_title', __( 'Opt-Ins', 'lw-woo-gdpr-user-optins' ) );
 
 	// Add it to the array.
-	$items  = wp_parse_args( array( LWWOOGDPR_OPTINS_FRONT_VAR => esc_attr( $title ) ), $items );
+	$items  = wp_parse_args( array( Core\FRONT_VAR => esc_attr( $title ) ), $items );
 
 	// Return our tabs.
 	return Helpers\adjust_account_tab_order( $items );

@@ -7,6 +7,8 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\Uninstall;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
+
 /**
  * Delete various options when uninstalling the plugin.
  *
@@ -15,7 +17,7 @@ namespace LiquidWeb\WooGDPRUserOptIns\Uninstall;
 function uninstall() {
 
 	// Delete any saved fields.
-	delete_option( LWWOOGDPR_OPTINS_OPTION_NAME );
+	delete_option( Core\OPTION_NAME );
 
 	// Include our action so that we may add to this later.
 	do_action( 'lw_woo_gdpr_optins_uninstall_process' );
@@ -23,5 +25,5 @@ function uninstall() {
 	// And flush our rewrite rules.
 	flush_rewrite_rules();
 }
-register_uninstall_hook( LWWOOGDPR_OPTINS_FILE, __NAMESPACE__ . '\uninstall' );
+register_uninstall_hook( Core\FILE, __NAMESPACE__ . '\uninstall' );
 

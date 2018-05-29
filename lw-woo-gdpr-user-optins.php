@@ -20,7 +20,32 @@ namespace LiquidWeb\WooGDPRUserOptIns;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Define our version.
-define( 'LWWOOGDPR_OPTINS_VERS', '0.0.1' );
+define( __NAMESPACE__ . '\VERS', '0.0.1' );
+
+// Define our file base.
+define( __NAMESPACE__ . '\BASE', plugin_basename( __FILE__ ) );
+
+// Plugin Folder URL.
+define( __NAMESPACE__ . '\URL', plugin_dir_url( __FILE__ ) );
+
+// Plugin root file.
+define( __NAMESPACE__ . '\FILE', __FILE__ );
+
+// Options database name.
+define( __NAMESPACE__ . '\OPTION_NAME', 'lw_woo_gdpr_optins_fields' );
+
+// User meta key prefix.
+define( __NAMESPACE__ . '\META_PREFIX', 'lw_woo_gdrp_user_optin_' );
+
+// Set our assets directory constant.
+define( __NAMESPACE__ . '\ASSETS_URL', URL . 'assets' );
+
+// Set our front menu endpoint constant.
+define( __NAMESPACE__ . '\FRONT_VAR', 'privacy-data' );
+
+// Set our tab base slug constant.
+define( __NAMESPACE__ . '\TAB_BASE', 'gdpr_user_optins' );
+
 
 // Handle the constants being set.
 set_constants();
@@ -46,43 +71,10 @@ require_once __DIR__ . '/includes/ajax-actions.php';
  */
 function set_constants() {
 
-	// Define our file base.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_BASE' ) ) {
-		define( 'LWWOOGDPR_OPTINS_BASE', plugin_basename( __FILE__ ) );
-	}
 
-	// Plugin Folder URL.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_URL' ) ) {
-		define( 'LWWOOGDPR_OPTINS_URL', plugin_dir_url( __FILE__ ) );
-	}
 
-	// Plugin root file.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_FILE' ) ) {
-		define( 'LWWOOGDPR_OPTINS_FILE', __FILE__ );
-	}
 
-	// Options database name.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_OPTION_NAME' ) ) {
-		define( 'LWWOOGDPR_OPTINS_OPTION_NAME', 'lw_woo_gdpr_optins_fields' );
-	}
-
-	// User meta key prefix.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_META_PREFIX' ) ) {
-		define( 'LWWOOGDPR_OPTINS_META_PREFIX', 'lw_woo_gdrp_user_optin_' );
-	}
-
-	// Set our assets directory constant.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_ASSETS_URL' ) ) {
-		define( 'LWWOOGDPR_OPTINS_ASSETS_URL', LWWOOGDPR_OPTINS_URL . 'assets' );
-	}
-
-	// Set our front menu endpoint constant.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_FRONT_VAR' ) ) {
-		define( 'LWWOOGDPR_OPTINS_FRONT_VAR', 'privacy-data' );
-	}
-
-	// Set our tab base slug constant.
 	if ( ! defined( 'LWWOOGDPR_OPTINS_TAB_BASE' ) ) {
-		define( 'LWWOOGDPR_OPTINS_TAB_BASE', 'gdpr_user_optins' );
+
 	}
 }

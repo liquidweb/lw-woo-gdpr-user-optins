@@ -7,6 +7,7 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\Admin;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 
@@ -80,13 +81,13 @@ function load_settings_assets( $hook ) {
 	$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'lw-woo-gdpr-user-optins-admin' : 'lw-woo-gdpr-user-optins-admin.min';
 
 	// Set a version for whether or not we're debugging.
-	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : LWWOOGDPR_OPTINS_VERS;
+	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : Core\VERS;
 
 	// Load our CSS file.
-	wp_enqueue_style( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
+	wp_enqueue_style( $handle, Core\ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
 
 	// And our JS.
-	wp_enqueue_script( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
+	wp_enqueue_script( $handle, Core\ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
 }
 
 /**
@@ -127,7 +128,7 @@ function quick_link( $links, $file ) {
 
 	// Check the base if we aren't paired up.
 	if ( ! $this_plugin ) {
-		$this_plugin = LWWOOGDPR_OPTINS_BASE;
+		$this_plugin = Core\BASE;
 	}
 
 	// Check to make sure we are on the correct plugin.

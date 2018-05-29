@@ -7,6 +7,7 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\Activate;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 
 /**
@@ -17,7 +18,7 @@ use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 function activate() {
 
 	// Create our option key with the initial defaults.
-	update_option( LWWOOGDPR_OPTINS_OPTION_NAME, Helpers\get_default_fields(), 'no' );
+	update_option( Core\OPTION_NAME, Helpers\get_default_fields(), 'no' );
 
 	// Include our action so that we may add to this later.
 	do_action( 'lw_woo_gdpr_optins_activate_process' );
@@ -25,4 +26,4 @@ function activate() {
 	// And flush our rewrite rules.
 	flush_rewrite_rules();
 }
-register_activation_hook( LWWOOGDPR_OPTINS_FILE, __NAMESPACE__ . '\activate' );
+register_activation_hook( Core\FILE, __NAMESPACE__ . '\activate' );

@@ -7,6 +7,8 @@
 
 namespace LiquidWeb\WooGDPRUserOptIns\Helpers;
 
+use LiquidWeb\WooGDPRUserOptIns as Core;
+
 /**
  * Check an code and (usually an error) return the appropriate text.
  *
@@ -122,7 +124,7 @@ function notice_text( $code = '' ) {
  * @return string
  */
 function get_settings_tab_link() {
-	return ! function_exists( 'menu_page_url' ) ? admin_url( 'admin.php?page=wc-settings&tab=' . LWWOOGDPR_OPTINS_TAB_BASE ) : add_query_arg( array( 'tab' => LWWOOGDPR_OPTINS_TAB_BASE ), menu_page_url( 'wc-settings', false ) );
+	return ! function_exists( 'menu_page_url' ) ? admin_url( 'admin.php?page=wc-settings&tab=' . Core\TAB_BASE ) : add_query_arg( array( 'tab' => Core\TAB_BASE ), menu_page_url( 'wc-settings', false ) );
 }
 
 /**
@@ -138,7 +140,7 @@ function get_account_tab_link( $args = array() ) {
 	$page   = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
 
 	// Add our link.
-	$link   = rtrim( $page, '/' ) . '/' . LWWOOGDPR_OPTINS_FRONT_VAR;
+	$link   = rtrim( $page, '/' ) . '/' . Core\FRONT_VAR;
 
 	// Return the link with or without args.
 	return ! empty( $args ) ? add_query_arg( $args, $link ) : $link;
@@ -207,7 +209,7 @@ function get_default_fields() {
 function get_current_optin_fields() {
 
 	// Fetch the option row.
-	$fields = get_option( LWWOOGDPR_OPTINS_OPTION_NAME, array() );
+	$fields = get_option( Core\OPTION_NAME, array() );
 
 	// Return the fields, or the defaults.
 	return ! empty( $fields ) ? $fields : get_default_fields();
@@ -303,7 +305,7 @@ function format_new_optin_field( $new_args = array(), $merge = false ) {
 	$update = array( $id => $setup );
 
 	// Pull our saved items.
-	$saved  = get_option( LWWOOGDPR_OPTINS_OPTION_NAME, array() );
+	$saved  = get_option( Core\OPTION_NAME, array() );
 
 	// And return the merged array.
 	return wp_parse_args( $update, $saved );
@@ -369,7 +371,7 @@ function update_saved_optin_fields( $fields = array(), $remove = '' ) {
 	}
 
 	// Make sure we have fields to begin with.
-	$fields = ! empty( $fields ) ? $fields : get_option( LWWOOGDPR_OPTINS_OPTION_NAME, array() );
+	$fields = ! empty( $fields ) ? $fields : get_option( Core\OPTION_NAME, array() );
 
 	// Check for the remove first.
 	if ( ! empty( $remove ) ) {
@@ -377,7 +379,7 @@ function update_saved_optin_fields( $fields = array(), $remove = '' ) {
 	}
 
 	// And update our data.
-	update_option( LWWOOGDPR_OPTINS_OPTION_NAME, $fields );
+	update_option( Core\OPTION_NAME, $fields );
 
 	// Return that we've done it.
 	return true;
@@ -489,7 +491,7 @@ function make_user_meta_key( $key = '' ) {
 	$strip  = str_replace( array( '-', ' ' ), '_', $clean );
 
 	// Return the key name with our prefix as a constant.
-	return LWWOOGDPR_OPTINS_META_PREFIX . esc_attr( $strip );
+	return Core\META_PREFIX . esc_attr( $strip );
 }
 
 /**
@@ -583,7 +585,7 @@ function maybe_account_endpoint_page( $in_query = false ) {
 	global $wp_query;
 
 	// Return if we are on our specific var or not.
-	return isset( $wp_query->query_vars[ LWWOOGDPR_OPTINS_FRONT_VAR ] ) ? true : false;
+	return isset( $wp_query->query_vars[ Core\FRONT_VAR ] ) ? true : false;
 }
 
 /**
@@ -636,7 +638,7 @@ function maybe_admin_settings_tab( $hook = '' ) {
 	}
 
 	// Check the tab portion.
-	if ( empty( $_GET['tab'] ) || LWWOOGDPR_OPTINS_TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
+	if ( empty( $_GET['tab'] ) || Core\TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
 		return false;
 	}
 
