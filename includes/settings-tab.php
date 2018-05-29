@@ -218,14 +218,14 @@ function output_repeating_group( $args ) {
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-required lw-woo-gdpr-user-optins-field-header" scope="col">';
 				echo '<i title="' . __( 'Required', 'lw-woo-gdpr-user-optins' ) . '" class="dashicons dashicons-warning"></i>';
-				echo '<span class="screen-reader-text">' . __( 'Required', 'lw-woo-gdpr-user-optins' ) . '</span>';
+				echo '<span class="screen-reader-text">' . esc_html__( 'Required', 'lw-woo-gdpr-user-optins' ) . '</span>';
 			echo '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-title lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Title', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-title lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Title', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-label lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Label', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-label lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Label', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Hook', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Hook', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-header" scope="col">&nbsp;</th>';
 
