@@ -1,4 +1,4 @@
-
+/*
 .lw-woo-gdpr-user-optins-table-wrap {
 	max-width: 94%;
 	margin-bottom: 20px;
@@ -29,9 +29,52 @@
 		width: 500px;
 	}
 
-}
+	.lw-woo-gdpr-user-optins-field-new-success {
+		margin: 0 0 0 10px;
+		width: 24px;
+		height: 24px;
+		font-size: 24px;
+		line-height: 1;
 
-.lw-woo-gdpr-user-optins-add-new-table-wrap {}
+		.dashicons {
+			width: 24px;
+			height: 24px;
+			font-size: 24px;
+			color: #4f8a10;
+		}
+	}
+
+	.lw-woo-gdpr-user-optins-field-hidden {
+		display: none;
+		visibility: hidden;
+	}
+
+}
+*/
+
+.lw-woo-gdpr-user-optins-add-new-table-wrap {
+
+	.lw-woo-gdpr-user-optins-field-new-success {
+		margin: 0 0 0 10px;
+		width: 24px;
+		height: 24px;
+		font-size: 24px;
+		line-height: 1;
+
+		.dashicons {
+			width: 24px;
+			height: 24px;
+			font-size: 24px;
+			color: #4f8a10;
+		}
+	}
+
+	.lw-woo-gdpr-user-optins-field-hidden {
+		display: none;
+		visibility: hidden;
+	}
+
+}
 
 
 

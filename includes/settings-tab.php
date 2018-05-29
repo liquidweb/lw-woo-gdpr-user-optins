@@ -13,8 +13,6 @@ use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 /**
  * Start our engines.
  */
-add_action( 'admin_notices', __NAMESPACE__ . '\display_admin_notices' );
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\load_settings_assets' );
 add_filter( 'woocommerce_settings_tabs_array', __NAMESPACE__ . '\add_settings_tab', 50 );
 add_action( 'woocommerce_update_options_gdpr_user_optins', __NAMESPACE__ . '\update_settings' );
 add_action( 'admin_init', __NAMESPACE__ . '\remove_single_field' );
@@ -22,78 +20,6 @@ add_action( 'woocommerce_settings_tabs_gdpr_user_optins', __NAMESPACE__ . '\sett
 add_action( 'woocommerce_admin_field_repeating_setup', __NAMESPACE__ . '\output_repeating_setup', 10, 1 );
 add_action( 'woocommerce_admin_field_repeating_group', __NAMESPACE__ . '\output_repeating_group', 10, 1 );
 
-
-/**
- * Set up the admin notices.
- *
- * @return mixed
- */
-function display_admin_notices() {
-
-	// Now check to make sure we have our key.
-	if ( empty( $_GET['lw-woo-gdpr-action'] ) ) {
-		return;
-	}
-
-	// Handle the success notice first.
-	if ( ! empty( $_GET['success'] ) ) {
-
-		// Determine my error text.
-		$msg_code   = ! empty( $_GET['message'] ) ? esc_attr( $_GET['message'] ) : 'success';
-		$msg_text   = Helpers\notice_text( $msg_code );
-
-		// Output the message along with the dismissable.
-		echo '<div class="notice notice-success is-dismissible lw-woo-gdpr-user-optins-admin-message">';
-			echo '<p><strong>' . wp_kses_post( $msg_text ) . '</strong></p>';
-		echo '</div>';
-
-		// And be done.
-		return;
-	}
-
-	// Figure out my error code.
-	$error_code = ! empty( $_GET['errcode'] ) ? esc_attr( $_GET['errcode'] ) : 'unknown';
-
-	// Determine my error text.
-	$error_text = Helpers\notice_text( $error_code );
-
-	// Output the message along with the dismissable.
-	echo '<div class="notice notice-error is-dismissible lw-woo-gdpr-user-optins-admin-message">';
-		echo '<p><strong>' . wp_kses_post( $error_text ) . '</strong></p>';
-	echo '</div>';
-
-	// And be done.
-	return;
-}
-
-/**
- * Load our admin side JS and CSS.
- *
- * @param $hook  Admin page hook we are current on.
- *
- * @return void
- */
-function load_settings_assets( $hook ) {
-
-	// Check my hook before moving forward.
-	if ( 'woocommerce_page_wc-settings' !== esc_attr( $hook ) ) {
-		return;
-	}
-
-	// Check the tab portion.
-	if ( empty( $_GET['tab'] ) || LWWOOGDPR_OPTINS_TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
-		return;
-	}
-
-	// Set a file suffix structure based on whether or not we want a minified version.
-	$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'lw-woo-gdpr-user-optins-admin' : 'lw-woo-gdpr-user-optins-admin.min';
-
-	// Set a version for whether or not we're debugging.
-	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : LWWOOGDPR_OPTINS_VERS;
-
-	// Load our CSS file.
-	wp_enqueue_style( 'lw-woo-gdpr-user-optins-admin', LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
-}
 
 /**
  * Add a new settings tab to the WooCommerce settings tabs array.
@@ -292,14 +218,14 @@ function output_repeating_group( $args ) {
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-required lw-woo-gdpr-user-optins-field-header" scope="col">';
 				echo '<i title="' . __( 'Required', 'lw-woo-gdpr-user-optins' ) . '" class="dashicons dashicons-warning"></i>';
-				echo '<span class="screen-reader-text">' . __( 'Required', 'lw-woo-gdpr-user-optins' ) . '</span>';
+				echo '<span class="screen-reader-text">' . esc_html__( 'Required', 'lw-woo-gdpr-user-optins' ) . '</span>';
 			echo '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-title lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Title', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-title lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Title', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-label lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Label', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-label lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Label', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
-			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-header" scope="col">' . __( 'Hook', 'lw-woo-gdpr-user-optins' ) . '</th>';
+			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-header" scope="col">' . esc_html__( 'Hook', 'lw-woo-gdpr-user-optins' ) . '</th>';
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-header" scope="col">&nbsp;</th>';
 

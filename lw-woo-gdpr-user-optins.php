@@ -36,12 +36,20 @@ require_once __DIR__ . '/includes/query-mods.php';
 require_once __DIR__ . '/includes/layouts.php';
 require_once __DIR__ . '/includes/account.php';
 require_once __DIR__ . '/includes/checkout.php';
+require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/settings-tab.php';
+require_once __DIR__ . '/includes/ajax-actions.php';
+
 
 /**
  * Define all the constants used in the plugin.
  */
 function set_constants() {
+
+	// Define our file base.
+	if ( ! defined( 'LWWOOGDPR_OPTINS_BASE' ) ) {
+		define( 'LWWOOGDPR_OPTINS_BASE', plugin_basename( __FILE__ ) );
+	}
 
 	// Plugin Folder URL.
 	if ( ! defined( 'LWWOOGDPR_OPTINS_URL' ) ) {
@@ -58,11 +66,6 @@ function set_constants() {
 		define( 'LWWOOGDPR_OPTINS_OPTION_NAME', 'lw_woo_gdpr_optins_fields' );
 	}
 
-	// Set our tab base slug constant.
-	if ( ! defined( 'LWWOOGDPR_OPTINS_TAB_BASE' ) ) {
-		define( 'LWWOOGDPR_OPTINS_TAB_BASE', 'gdpr_user_optins' );
-	}
-
 	// User meta key prefix.
 	if ( ! defined( 'LWWOOGDPR_OPTINS_META_PREFIX' ) ) {
 		define( 'LWWOOGDPR_OPTINS_META_PREFIX', 'lw_woo_gdrp_user_optin_' );
@@ -76,5 +79,10 @@ function set_constants() {
 	// Set our front menu endpoint constant.
 	if ( ! defined( 'LWWOOGDPR_OPTINS_FRONT_VAR' ) ) {
 		define( 'LWWOOGDPR_OPTINS_FRONT_VAR', 'privacy-data' );
+	}
+
+	// Set our tab base slug constant.
+	if ( ! defined( 'LWWOOGDPR_OPTINS_TAB_BASE' ) ) {
+		define( 'LWWOOGDPR_OPTINS_TAB_BASE', 'gdpr_user_optins' );
 	}
 }

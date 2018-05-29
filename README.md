@@ -3,4 +3,4 @@ A toolset to allow WooCommerce store owners to create and manage user opt-in dat
 
 
 ### To Do
-* this readme file, clearly
+* this readme file, clearly.

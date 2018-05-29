@@ -69,15 +69,10 @@ function merge_optin_post_data( $data ) {
 	}
 
 	// Clean each entry.
-	$items = array_filter( $_POST['gdpr-user-optins'], 'sanitize_text_field' );
+	$items  = array_map( 'sanitize_text_field', $_POST['gdpr-user-optins'] );
 
-	// Loop the posted opt in values.
-	foreach ( $items as $key => $value ) {
-		$data[ $key ] = $value;
-	}
-
-	// And return the modified array.
-	return $data;
+	// Merge our opt-in items to the overall data array and return it.
+	return array_merge( $data, $items );
 }
 
 /**
@@ -102,7 +97,7 @@ function validate_optin_fields( $data, $errors ) {
 	foreach ( $fields as $key => $field ) {
 
 		// If it isn't a required field, skip it.
-		if ( empty( $field['required'] ) ) {
+		if ( ! Helpers\maybe_field_required( $key, $fields ) ) {
 			continue;
 		}
 
@@ -127,7 +122,7 @@ function validate_optin_fields( $data, $errors ) {
 }
 
 /**
- * Validate the opt-in fields.
+ * Update the opt-in field choices for the user.
  *
  * @param  object $customer  The WooCommerce customer object.
  * @param  array  $data      The post data from the order.

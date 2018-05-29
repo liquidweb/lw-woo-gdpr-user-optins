@@ -15,7 +15,6 @@ use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
  */
 add_action( 'init', __NAMESPACE__ . '\check_user_optin_changes' );
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\load_endpoint_assets' );
-add_action( 'woocommerce_before_account_navigation', __NAMESPACE__ . '\add_endpoint_anchor', 10 );
 add_filter( 'the_title', __NAMESPACE__ . '\add_endpoint_title' );
 add_action( 'woocommerce_before_account_navigation', __NAMESPACE__ . '\add_endpoint_notices', 15 );
 add_filter( 'woocommerce_account_menu_items', __NAMESPACE__ . '\add_endpoint_menu_item' );
@@ -55,8 +54,21 @@ function check_user_optin_changes() {
 	// Filter my field args getting passed.
 	$field_args = empty( $_POST['lw_woo_gdpr_user_optins_items'] ) ? array() : array_filter( $_POST['lw_woo_gdpr_user_optins_items'], 'sanitize_text_field' );
 
+	// Run our validation checks.
+	if ( ! Helpers\confirm_required_fields( array_keys( $field_args ) ) ) {
+
+		// Set up our redirect args.
+		$setup  = array( 'success' => 0, 'lw-woo-gdpr-action' => 1, 'errcode' => 'missing-required-field' );
+
+		// Redirect with our error code.
+		Helpers\account_page_redirect( $setup );
+	}
+
 	// Attempt to update the settings.
-	if ( ! Helpers\update_user_optins( $user_id, null, $field_args ) ) {
+	$update = Helpers\update_user_optins( $user_id, null, $field_args );
+
+	// Make sure it came back OK.
+	if ( ! $update ) {
 
 		// Set up our redirect args.
 		$setup  = array( 'success' => 0, 'lw-woo-gdpr-action' => 1, 'errcode' => 'update-error' );
@@ -84,6 +96,9 @@ function load_endpoint_assets() {
 		return;
 	}
 
+	// Set my handle.
+	$handle = 'lw-woo-gdpr-user-optins-front';
+
 	// Set a file suffix structure based on whether or not we want a minified version.
 	$file   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'lw-woo-gdpr-user-optins-front' : 'lw-woo-gdpr-user-optins-front.min';
 
@@ -91,16 +106,13 @@ function load_endpoint_assets() {
 	$vers   = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? time() : LWWOOGDPR_OPTINS_VERS;
 
 	// Load our CSS file.
-	wp_enqueue_style( 'lw-woo-gdpr-user-optins-front', LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
-}
+	wp_enqueue_style( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
 
-/**
- * Add the anchor for the response messages.
- *
- * @return HTML
- */
-function add_endpoint_anchor() {
-	echo '<div class="lw-woo-account-notices"></div>';
+	// And our JS.
+	wp_enqueue_script( $handle, LWWOOGDPR_OPTINS_ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
+	wp_localize_script( $handle, 'frontWooUserGDPR',
+		array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) )
+	);
 }
 
 /**
@@ -117,45 +129,25 @@ function add_endpoint_notices() {
 
 	// Bail without our result flag.
 	if ( empty( $_GET['lw-woo-gdpr-action'] ) ) {
+
+		// Echo out the blank placeholder for Ajax calls.
+		echo '<div class="lw-woo-gdpr-user-optins-account-notices"></div>';
+
+		// And just be done.
 		return;
 	}
 
-	// Set our base class.
-	$class  = 'lw-woo-gdpr-user-optins-notice';
-	$code   = '';
+	// Check for a response code.
+	$msg_code   = ! empty( $_GET['errcode'] ) ? sanitize_text_field( $_GET['errcode'] ) : 'unknown';
 
-	// We have an error, so handle that.
-	if ( empty( $_GET['success'] ) ) {
+	// Figure out the text.
+	$msg_text   = ! empty( $_GET['message'] ) ? sanitize_text_field( $_GET['message'] ) : Helpers\notice_text( $msg_code );
 
-		// Add to the class.
-		$class .= ' lw-woo-gdpr-user-optins-notice-error';
+	// Determine the message type.
+	$msg_type   = empty( $_GET['success'] ) ? 'error' : 'success';
 
-		// Confirm our error code.
-		$code   = ! empty( $_GET['errcode'] ) ? esc_attr( $_GET['errcode'] ) : 'unknown';
-	}
-
-	// We have success, so handle that.
-	if ( ! empty( $_GET['success'] ) ) {
-
-		// Add to the class.
-		$class .= ' lw-woo-gdpr-user-optins-notice-success';
-
-		// Figure out a code based on what action we took.
-		$code  = ! empty( $_GET['message'] ) ? sanitize_text_field( $_GET['message'] ) : 'success-general';
-	}
-
-	// Bail if we have no message text.
-	if ( empty( $code ) ) {
-		return;
-	}
-
-	// Get my text for the notice.
-	$msgtxt = Helpers\notice_text( $code );
-
-	// And output the actual message.
-	echo '<div class="' . esc_attr( $class ) . '">';
-		echo '<p>' . wp_kses_post( $msgtxt ) . '</p>';
-	echo '</div>';
+	// Output the message.
+	echo Layouts\account_message_markup( $msg_text, $msg_type, true, false );
 }
 
 /**
@@ -207,6 +199,6 @@ function add_endpoint_menu_item( $items ) {
  * @return HTML
  */
 function add_endpoint_content() {
-	Layouts\user_optin_statuses( get_current_user_id(), true );
+	Layouts\optin_status_display_form( get_current_user_id(), true );
 }
 

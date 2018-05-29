@@ -28,11 +28,20 @@ function notice_text( $code = '' ) {
 			return __( 'The opt-in field has been successfully deleted.', 'lw-woo-gdpr-user-optins' );
 			break;
 
+		case 'success-sorted' :
+			return __( 'Your field sort order has been saved.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'success-added' :
+			return __( 'Your new field has been added.', 'lw-woo-gdpr-user-optins' );
+			break;
+
 		case 'success-change-opts' :
-			return __( 'Your new settings have been updated.', 'lw-woo-gdpr-user-optins' );
+			return __( 'Your opt-in selections have been updated.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'success-general' :
+		case 'success' :
 			return __( 'Success! Your request has been processed.', 'lw-woo-gdpr-user-optins' );
 			break;
 
@@ -60,8 +69,36 @@ function notice_text( $code = '' ) {
 			return __( 'The label field is required.', 'lw-woo-gdpr-user-optins' );
 			break;
 
+		case 'no-field-ids' :
+			return __( 'The field IDs required for sorting could not be determined.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'bad-merge' :
+			return __( 'The new field could not be added correctly.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'no-markup' :
+			return __( 'The new field display could not be added.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'not-removed' :
+			return __( 'There was an error removing the field.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'no-user-id' :
+			return __( 'The required user ID was not provided.', 'lw-woo-gdpr-user-optins' );
+			break;
+
 		case 'no-user' :
 			return __( 'The current user could not be determined.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'user-update-failed' :
+			return __( 'Your opt-in selections could not be updated.', 'lw-woo-gdpr-user-optins' );
+			break;
+
+		case 'missing-required-field' :
+			return __( 'Please review all the required fields.', 'lw-woo-gdpr-user-optins' );
 			break;
 
 		case 'unknown' :
@@ -69,11 +106,14 @@ function notice_text( $code = '' ) {
 			return __( 'There was an unknown error with your request.', 'lw-woo-gdpr-user-optins' );
 			break;
 
-		default :
-			return __( 'There was an error with your request.', 'lw-woo-gdpr-user-optins' );
-
 		// End all case breaks.
 	}
+
+	// Set a default text.
+	$msgtxt = __( 'There was an error with your request.', 'lw-woo-gdpr-user-optins' );
+
+	// Return it with a filter
+	return apply_filters( 'lw_woo_gdpr_optins_default_fields', $msgtxt, $code );
 }
 
 /**
@@ -171,6 +211,55 @@ function get_current_optin_fields() {
 
 	// Return the fields, or the defaults.
 	return ! empty( $fields ) ? $fields : get_default_fields();
+}
+
+/**
+ * Get our required saved fields.
+ *
+ * @return array
+ */
+function get_required_optin_fields() {
+
+	// Fetch my existing fields.
+	$fields = get_current_optin_fields();
+
+	// Bail without my fields.
+	if ( empty( $fields ) ) {
+		return;
+	}
+
+	// Now loop my fields.
+	foreach ( $fields as $key => $field ) {
+
+		// If it isn't a required field, unset it.
+		if ( ! maybe_field_required( $key, $fields ) ) {
+			unset( $fields[ $key ] );
+		}
+	}
+
+	// Return what's left.
+	return ! empty( $fields ) ? $fields : array();
+}
+
+/**
+ * Take an array key for the fields and return that data.
+ *
+ * @param  string $key     The key inside the data array we want.
+ *
+ * @return mixed           Array if field is found, false otherwise.
+ */
+function get_single_optin_data( $key = '' ) {
+
+	// Fetch all the fields.
+	$fields = get_current_optin_fields();
+
+	// Bail if no fields exist.
+	if ( empty( $fields ) ) {
+		return false;
+	}
+
+	// Return that field if it exists, or false.
+	return isset( $fields[ $key ] ) ? $fields[ $key ] : false;
 }
 
 /**
@@ -345,7 +434,7 @@ function update_user_optins( $user_id = 0, $customer, $data = array(), $use_keys
 			$action = sanitize_text_field( $field['action'] );
 
 			// And do the action.
-			do_action( $action, $field );
+			do_action( $action, $field, $user_id );
 		}
 	}
 
@@ -495,4 +584,126 @@ function maybe_account_endpoint_page( $in_query = false ) {
 
 	// Return if we are on our specific var or not.
 	return isset( $wp_query->query_vars[ LWWOOGDPR_OPTINS_FRONT_VAR ] ) ? true : false;
+}
+
+/**
+ * Check if a specific field is required.
+ *
+ * @param  string $key     The array key from the dataset.
+ * @param  array  $fields  Our array of fields (if already available).
+ *
+ * @return boolean
+ */
+function maybe_field_required( $key = '', $fields = array() ) {
+
+	// Make sure we have everything required.
+	if ( empty( $key ) ) {
+		return false;
+	}
+
+	// Get my fields.
+	$fields = ! empty( $fields ) ? $fields : get_current_optin_fields();
+
+	// Bail without my fields.
+	if ( empty( $fields ) || ! isset( $fields[ $key ] ) ) {
+		return false;
+	}
+
+	// Set my single field.
+	$field  = $fields[ $key ];
+
+	// Now check the specific field array data.
+	return ! empty( $field['required'] ) ? true : false;
+}
+
+/**
+ * Check if we are on the admin settings tab.
+ *
+ * @param  string $hook  Optional hook sent from some actions.
+ *
+ * @return boolean
+ */
+function maybe_admin_settings_tab( $hook = '' ) {
+
+	// Can't be the admin tab if we aren't admin.
+	if ( ! is_admin() ) {
+		return false;
+	}
+
+	// Check the hook if we passed one.
+	if ( ! empty( $hook ) && 'woocommerce_page_wc-settings' !== esc_attr( $hook ) ) {
+		return false;
+	}
+
+	// Check the tab portion.
+	if ( empty( $_GET['tab'] ) || LWWOOGDPR_OPTINS_TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
+		return false;
+	}
+
+	// Passed everything, so return true.
+	return true;
+}
+
+/**
+ * Check our various constants on an Ajax call.
+ *
+ * @return boolean
+ */
+function check_ajax_constants() {
+
+	// Check for a REST API request.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		return false;
+	}
+
+	// Check for running an autosave.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return false;
+	}
+
+	// Check for running a cron, unless we've skipped that.
+	if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		return false;
+	}
+
+	// We hit none of the checks, so proceed.
+	return true;
+}
+
+/**
+ * Confirm the user has selected all that are required.
+ *
+ * @param  array  $items  The items the user has selected.
+ *
+ * @return boolean
+ */
+function confirm_required_fields( $items = array() ) {
+
+	// Fetch my required fields.
+	$fields = get_required_optin_fields();
+
+	// If no required fields exist, we're OK.
+	if ( empty( $fields ) ) {
+		return true;
+	}
+
+	// Set my initial flag.
+	$valid  = true;
+
+	// Now loop my fields.
+	foreach ( $fields as $key => $field ) {
+
+		// If we have the required opt-in, skip it.
+		if ( ! in_array( $key, $items ) ) {
+
+			// Set my valid to false.
+			$valid  = false;
+
+			// And be done.
+			break;
+		}
+	}
+
+	// Return the result.
+	return $valid;
 }

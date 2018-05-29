@@ -9,7 +9,6 @@ namespace LiquidWeb\WooGDPRUserOptIns\Layouts;
 
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 
-
 /**
  * The individual new entry field.
  *
@@ -46,8 +45,9 @@ function add_new_entry_block( $echo = false ) {
 					$field .= esc_html__( 'Label', 'lw-woo-gdpr-user-optins' );
 				$field .= '</th>';
 
-				// A spacer to align with the button.
-				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-add-new-button lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
+				// Add spacers to align with the button.
+				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-add-new-button lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
+				$field .= '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-header">&nbsp;</th>';
 
 			// Close the row.
 			$field .= '</tr>';
@@ -83,15 +83,23 @@ function add_new_entry_block( $echo = false ) {
 				$field .= '</td>';
 
 				// Add the button setup itself.
-				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-input-button lw-woo-gdpr-user-optins-field-add-new-button">';
+				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-hook lw-woo-gdpr-user-optins-field-input-button lw-woo-gdpr-user-optins-field-add-new-button">';
 
 					// The button.
-					$field .= '<button type="submit" class="button button-secondary button-small" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
+					$field .= '<button type="submit" class="button button-secondary button-small lw-woo-gdpr-user-optin-add-new-button" id="lw-woo-gdpr-user-optin-add-new">' . esc_html__( 'Add New Item', 'lw-woo-gdpr-user-optins' ) . '</button>';
+
+					// Include the checkmark that will show and hide when adding a new field.
+					$field .= '<span class="lw-woo-gdpr-user-optins-field-new-success lw-woo-gdpr-user-optins-field-hidden hide-if-no-js">';
+						$field .= '<i class="dashicons dashicons-yes"></i>';
+					$field .= '</span>';
 
 					// Include a nonce.
 					$field .= wp_nonce_field( 'lw_woo_gdpr_new_optin_action', 'lw_woo_gdpr_new_optin_nonce', true, false );
 
 				$field .= '</td>';
+
+				// Add a blank table spacer, because tables.
+				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-add-new-button">&nbsp;</td>';
 
 			// Close the row.
 			$field .= '</tr>';
@@ -121,13 +129,18 @@ function add_new_entry_block( $echo = false ) {
  */
 function table_row( $args = array(), $echo = false ) {
 
+	// Bail without the args.
+	if ( empty( $args ) || empty( $args['id'] ) ) {
+		return false;
+	}
+
 	// Create my name field and confirm the action name.
 	$name   = 'lw-woo-gdpr-user-optins-current[' . esc_attr( $args['id'] ) . ']';
 	$check  = ! empty( $args['required'] ) ? true : false;
 	$action = ! empty( $args['action'] ) ? $args['action'] : Helpers\make_action_key( $args['id'] );
 
 	// Set our delete link.
-	$d_nonc = wp_create_nonce( 'lw_woo_optin_single_' . esc_attr( $args['id'] )  );
+	$d_nonc = wp_create_nonce( 'lw_woo_gdpr_user_optin_single_' . esc_attr( $args['id'] )  );
 	$d_args = array( 'lw-woo-gdpr-user-optin-single-delete' => 1, 'field-id' => esc_attr( $args['id'] ), 'nonce' => $d_nonc );
 	$delete = add_query_arg( $d_args, Helpers\get_settings_tab_link() );
 
@@ -179,7 +192,7 @@ function table_row( $args = array(), $echo = false ) {
 			$field .= '</a>';
 
 			// Handle the sort trigger.
-			$field .= '<span class="lw-woo-gdpr-user-optins-field-trigger-item lw-woo-gdpr-user-optins-field-trigger-sort hide-if-no-js" href="">';
+			$field .= '<span class="lw-woo-gdpr-user-optins-field-trigger-item lw-woo-gdpr-user-optins-field-trigger-sort hide-if-no-js">';
 				$field .= '<i class="lw-woo-gdpr-user-optins-field-trigger-icon dashicons dashicons-sort"></i>';
 			$field .= '</span>';
 
@@ -205,13 +218,13 @@ function table_row( $args = array(), $echo = false ) {
  *
  * @return HTML
  */
-function user_optin_statuses( $user_id = 0, $echo = false ) {
+function optin_status_display_form( $user_id = 0, $echo = false ) {
 
-	// Fetch my existing fields.
-	$fields = Helpers\get_current_optin_fields();
+	// Fetch my list of optins.
+	$user_list  = optin_status_list( $user_id );
 
-	// Bail without my fields.
-	if ( empty( $fields ) ) {
+	// Bail without my list.
+	if ( ! $user_list ) {
 		return;
 	}
 
@@ -228,7 +241,7 @@ function user_optin_statuses( $user_id = 0, $echo = false ) {
 	$build .= '<form class="lw-woo-gdpr-user-optins-change-form" action="" method="post">';
 
 		// Display our list of items.
-		$build .= optin_status_list( $fields, $user_id );
+		$build .= $user_list;
 
 		// Open the paragraph for the submit button.
 		$build .= '<p class="lw-woo-gdpr-user-optins-change-submit">';
@@ -265,11 +278,14 @@ function user_optin_statuses( $user_id = 0, $echo = false ) {
  *
  * @return HTML
  */
-function optin_status_list( $fields = array(), $user_id = 0, $echo = false ) {
+function optin_status_list( $user_id = 0, $echo = false ) {
+
+	// Fetch my existing fields.
+	$fields = Helpers\get_current_optin_fields();
 
 	// Bail without fields or a user ID.
 	if ( empty( $fields ) || empty( $user_id ) ) {
-		return;
+		return false;
 	}
 
 	// Set our empty.
@@ -293,7 +309,6 @@ function optin_status_list( $fields = array(), $user_id = 0, $echo = false ) {
 		$new_field_args = array(
 			'name'      => 'lw_woo_gdpr_user_optins_items[' . esc_attr( $field['id'] ) . ']',
 			'label'     => wp_kses_post( $label ),
-			'required'  => false,
 			'checked'   => $check,
 		);
 
@@ -388,4 +403,113 @@ function single_checkbox_field( $args = array(), $echo = false ) {
 
 	// Just return it.
 	return $field;
+}
+
+/**
+ * Build the markup for an admin notice.
+ *
+ * @param  string  $message      The actual message to display.
+ * @param  string  $type         Which type of message it is.
+ * @param  boolean $dismiss      Whether it should be dismissable.
+ * @param  boolean $show_button  Show the dismiss button (for Ajax calls).
+ * @param  boolean $echo         Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+function admin_message_markup( $message = '', $type = 'error', $dismiss = true, $show_button = false, $echo = false ) {
+
+	// Bail without the required message text.
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	// Set my base class.
+	$class  = 'notice notice-' . esc_attr( $type ) . ' lw-woo-gdpr-user-optins-admin-message';
+
+	// Add the dismiss class.
+	if ( $dismiss ) {
+		$class .= ' is-dismissible';
+	}
+
+	// Set an empty.
+	$field  = '';
+
+	// Start the notice markup.
+	$field .= '<div class="' . esc_attr( $class ) . '">';
+
+		// Display the actual message.
+		$field .= '<p><strong>' . wp_kses_post( $message ) . '</strong></p>';
+
+		// Show the button if we set dismiss and button variables.
+		if ( $dismiss && $show_button ) {
+			$field .= '<button type="button" class="notice-dismiss">' . screen_reader_text() . '</button>';
+		}
+
+	// And close the div.
+	$field .= '</div>';
+
+	// Echo it if requested.
+	if ( ! empty( $echo ) ) {
+		echo $field;
+	}
+
+	// Just return it.
+	return $field;
+}
+
+/**
+ * Build the markup for an account page notice.
+ *
+ * @param  string  $message      The actual message to display.
+ * @param  string  $type         Which type of message it is.
+ * @param  boolean $echo         Whether to echo out the markup or return it.
+ *
+ * @return HTML
+ */
+function account_message_markup( $message = '', $type = 'error', $wrap = false, $echo = false ) {
+
+	// Bail without the required message text.
+	if ( empty( $message ) ) {
+		return;
+	}
+
+	// Get my dismiss link.
+	$dslink = Helpers\get_account_tab_link();
+
+	// Set an empty.
+	$field  = '';
+
+	// Start the notice markup.
+	$field .= '<div class="lw-woo-gdpr-user-optins-notice lw-woo-gdpr-user-optins-notice-' . esc_attr( $type ) . '">';
+
+		// Display the actual message.
+		$field .= '<p>' . wp_kses_post( $message ) . '</p>';
+
+		// And our dismissal button.
+		$field .= '<a class="lw-woo-gdpr-user-optins-notice-dismiss" href="' . esc_url( $dslink ) . '">';
+			$field .= screen_reader_text() . '<i class="dashicons dashicons-no"></i>';
+		$field .= '</a>';
+
+	// And close the div.
+	$field .= '</div>';
+
+	// Add the optional wrapper.
+	$build  = ! $wrap ? $field : '<div class="lw-woo-gdpr-user-optins-account-notices">' . $field . '</div>';
+
+	// Echo it if requested.
+	if ( ! empty( $echo ) ) {
+		echo $build;
+	}
+
+	// Just return it.
+	return $build;
+}
+
+/**
+ * Set the markup for the screen reader text on dismiss.
+ *
+ * @return HTML
+ */
+function screen_reader_text() {
+	return '<span class="screen-reader-text">' . esc_html__( 'Dismiss this notice.', 'lw-woo-gdpr-user-optins' ) . '</span>';
 }
