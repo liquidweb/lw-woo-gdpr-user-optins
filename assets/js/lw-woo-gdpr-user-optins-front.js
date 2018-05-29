@@ -18,22 +18,6 @@ function scrollToMessage() {
 jQuery(document).ready( function($) {
 
 	/**
-	 * Quick helper to check for an existance of an element.
-	 */
-	$.fn.divExists = function(callback) {
-
-		// Slice some args.
-		var args = [].slice.call( arguments, 1 );
-
-		// Check for length.
-		if ( this.length ) {
-			callback.call( this, args );
-		}
-		// Return it.
-		return this;
-	};
-
-	/**
 	 * Check for the user saving opt-in actions.
 	 */
 	$( 'form.lw-woo-gdpr-user-optins-change-form' ).submit( function( event ) {
