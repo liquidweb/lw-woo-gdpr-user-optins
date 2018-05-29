@@ -93,7 +93,7 @@ jQuery(document).ready( function($) {
 		 * Set the button variable to handle the two submits.
 		 */
 		$( saveForm ).on( 'click', 'button', function() {
-			saveSubmit = $( this ).hasClass( 'lw-woo-gdpr-user-optin-add-new-button' ) ? true : false;
+			saveSubmit = $( this ).hasClass( 'lw-woo-gdpr-user-optin-add-new-button' );
 		});
 
 		/**
