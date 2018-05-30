@@ -15,7 +15,7 @@ function scrollToMessage() {
 /**
  * Now let's get started.
  */
-jQuery(document).ready( function($) {
+jQuery( document ).ready( function($) {
 
 	/**
 	 * Check for the user saving opt-in actions.
