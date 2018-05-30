@@ -138,7 +138,7 @@ jQuery( document ).ready( function($) {
 					clearNewFieldInputs( true );
 
 					// Add the row itself.
-					$( 'table#lw-woo-gdpr-user-optins-list-table tr:last' ).after( response.data.markup );
+					$( 'table#lw-woo-gdpr-user-optins-list-table tbody tr:last' ).after( response.data.markup );
 				}
 			}, 'json' );
 		});
