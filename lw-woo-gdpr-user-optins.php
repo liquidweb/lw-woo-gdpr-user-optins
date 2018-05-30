@@ -47,9 +47,6 @@ define( __NAMESPACE__ . '\FRONT_VAR', 'privacy-data' );
 define( __NAMESPACE__ . '\TAB_BASE', 'gdpr_user_optins' );
 
 
-// Handle the constants being set.
-set_constants();
-
 // Go and load our files.
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/activate.php';
@@ -64,17 +61,3 @@ require_once __DIR__ . '/includes/checkout.php';
 require_once __DIR__ . '/includes/admin.php';
 require_once __DIR__ . '/includes/settings-tab.php';
 require_once __DIR__ . '/includes/ajax-actions.php';
-
-
-/**
- * Define all the constants used in the plugin.
- */
-function set_constants() {
-
-
-
-
-	if ( ! defined( 'LWWOOGDPR_OPTINS_TAB_BASE' ) ) {
-
-	}
-}
