@@ -214,7 +214,7 @@ function output_repeating_group( $args ) {
 	echo '<table id="lw-woo-gdpr-user-optins-list-table" class="lw-woo-gdpr-user-optins-table-wrap lw-woo-gdpr-user-optins-list-table-wrap wp-list-table widefat fixed striped">';
 
 	// Set up the table header.
-	echo '<thead>';
+	echo '<thead class="lw-woo-gdpr-user-optins-list-table-header">';
 		echo '<tr>';
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-required lw-woo-gdpr-user-optins-field-header" scope="col">';
@@ -234,7 +234,7 @@ function output_repeating_group( $args ) {
 	echo '</thead>';
 
 	// Set the table body.
-	echo '<tbody>';
+	echo '<tbody class="lw-woo-gdpr-user-optins-list-table-body">';
 
 	// Loop my fields and make a block of each one.
 	foreach ( $fields as $field ) {
@@ -243,6 +243,11 @@ function output_repeating_group( $args ) {
 
 	// Close the table body.
 	echo '</tbody>';
+
+	// Set up the table footer.
+	echo '<tfoot class="lw-woo-gdpr-user-optins-list-table-footer">';
+		echo '<tr><th class="lw-woo-gdpr-user-optins-field-header lw-woo-gdpr-user-optins-field-blank-header" colspan="5">&nbsp;</th></tr>';
+	echo '</tfoot>';
 
 	// Close my table.
 	echo '</table>';

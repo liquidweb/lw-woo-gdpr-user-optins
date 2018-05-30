@@ -34,20 +34,6 @@ function clearNewFieldInputs( showIcon ) {
 }
 
 /**
- * Set a fixed with on the table when sorting.
- */
-function fixWidthHelper( e, ui ) {
-
-	// Map through the items to set up the width.
-	ui.children().map( function() {
-		jQuery( this ).width( jQuery( this ).width() );
-	});
-
-	// Return the resulting UI.
-	return ui;
-}
-
-/**
  * Now let's get started.
  */
 jQuery( document ).ready( function($) {
@@ -70,7 +56,7 @@ jQuery( document ).ready( function($) {
 		// Make our table sortable.
 		$( sortBody ).sortable({
 			handle: '.lw-woo-gdpr-user-optins-field-trigger-icon',
-			helper: fixWidthHelper,
+			containment: sortTable,
 			update: function( event, ui ) {
 
 				// Build the data structure for the call with the updated sort order.

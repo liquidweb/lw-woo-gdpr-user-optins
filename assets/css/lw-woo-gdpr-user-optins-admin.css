@@ -1,9 +1,13 @@
 .lw-woo-gdpr-user-optins-table-wrap {
   max-width: 94%;
   margin-bottom: 20px; }
+  .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-single-row.ui-sortable-helper {
+    display: table; }
   .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-header {
     padding: 4px 5px;
     font-weight: 600; }
+    .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-header.lw-woo-gdpr-user-optins-field-blank-header {
+      font-size: 1px; }
   .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field {
     padding: 4px 5px; }
   .lw-woo-gdpr-user-optins-table-wrap .lw-woo-gdpr-user-optins-field-required {
