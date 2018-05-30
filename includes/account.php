@@ -29,13 +29,13 @@ add_action( 'woocommerce_account_privacy-data_endpoint', __NAMESPACE__ . '\add_e
  */
 function check_user_optin_changes() {
 
-	// Make sure we have the action we want.
-	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_user_optins_change' !== sanitize_text_field( $_POST['action'] ) ) {
+	// The nonce check. ALWAYS A NONCE CHECK.
+	if ( ! isset( $_POST['lw_woo_gdpr_user_optins_change_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['lw_woo_gdpr_user_optins_change_nonce'] ), 'lw_woo_gdpr_user_optins_change_action' ) ) {
 		return;
 	}
 
-	// The nonce check. ALWAYS A NONCE CHECK.
-	if ( ! isset( $_POST['lw_woo_gdpr_user_optins_change_nonce'] ) || ! wp_verify_nonce( $_POST['lw_woo_gdpr_user_optins_change_nonce'], 'lw_woo_gdpr_user_optins_change_action' ) ) {
+	// Make sure we have the action we want.
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_user_optins_change' !== sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) {
 		return;
 	}
 
@@ -148,7 +148,7 @@ function add_endpoint_notices() {
 	$msg_type   = empty( $_GET['success'] ) ? 'error' : 'success';
 
 	// Output the message.
-	echo Layouts\account_message_markup( $msg_text, $msg_type, true, false );
+	echo Layouts\account_message_markup( $msg_text, $msg_type, true, false ); // WPCS: XSS ok.
 }
 
 /**

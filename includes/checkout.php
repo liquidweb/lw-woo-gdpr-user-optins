@@ -51,7 +51,7 @@ function display_checkout_fields() {
 	}
 
 	// And echo it out.
-	echo $build;
+	echo $build; // WPCS: XSS ok.
 }
 
 /**
@@ -64,7 +64,7 @@ function display_checkout_fields() {
 function merge_optin_post_data( $data ) {
 
 	// Bail if we have no posted data.
-	if ( empty( $_POST['gdpr-user-optins'] ) ) {
+	if ( empty( $_POST['gdpr-user-optins'] ) ) { // WPCS: CSRF ok.
 		return $data;
 	}
 
