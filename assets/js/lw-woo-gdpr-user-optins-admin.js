@@ -151,12 +151,15 @@ jQuery( document ).ready( function($) {
 			// Stop the actual click.
 			event.preventDefault();
 
+			// Set the initial var.
+			var $this   = $( this );
+
 			// Set my field block.
-			var fieldBlock  = $( this ).parents( 'tr.lw-woo-gdpr-user-optins-single-row' );
+			var fieldBlock  = $this.parents( 'tr.lw-woo-gdpr-user-optins-single-row' );
 
 			// Fetch my field ID and nonce.
-			var fieldID     = $( this ).data( 'field-id' );
-			var fieldNonce  = $( this ).data( 'nonce' );
+			var fieldID     = $this.data( 'field-id' );
+			var fieldNonce  = $this.data( 'nonce' );
 
 			// Bail real quick without a nonce.
 			if ( '' === fieldNonce || undefined === fieldNonce ) {
@@ -196,7 +199,7 @@ jQuery( document ).ready( function($) {
 
 					// Fade out the field and then remove it.
 					$( sortTable ).find( fieldBlock ).fadeOut( 500, function() {
-						$( this ).remove();
+						$( fieldBlock ).remove();
 					});
 				}
 			}, 'json' );
