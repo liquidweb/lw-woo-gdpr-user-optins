@@ -32,7 +32,7 @@ function save_user_optins() {
 	}
 
 	// Check for the specific action.
-	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_save_user_optins' !== sanitize_text_field( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_save_user_optins' !== sanitize_text_field( $_POST['action'] ) ) { // WPCS: CSRF ok.
 		return;
 	}
 
@@ -95,12 +95,12 @@ function update_sorted_rows() {
 	}
 
 	// Check for the specific action.
-	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_sort' !== sanitize_text_field( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_sort' !== sanitize_text_field( $_POST['action'] ) ) { // WPCS: CSRF ok.
 		return;
 	}
 
 	// Check to see if our sorted data was provided.
-	if ( empty( $_POST['sorted'] ) ) {
+	if ( empty( $_POST['sorted'] ) ) { // WPCS: CSRF ok.
 		send_ajax_error_response( 'no-field-ids' );
 	}
 
@@ -146,7 +146,7 @@ function add_new_optin_row() {
 	}
 
 	// Check for the specific action.
-	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_add_new' !== sanitize_text_field( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_add_new' !== sanitize_text_field( $_POST['action'] ) ) { // WPCS: CSRF ok.
 		return;
 	}
 
@@ -224,7 +224,7 @@ function delete_single_row() {
 	}
 
 	// Check for the specific action.
-	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_delete_row' !== sanitize_text_field( $_POST['action'] ) ) {
+	if ( empty( $_POST['action'] ) || 'lw_woo_gdpr_optins_delete_row' !== sanitize_text_field( $_POST['action'] ) ) { // WPCS: CSRF ok.
 		return;
 	}
 
@@ -239,8 +239,8 @@ function delete_single_row() {
 	}
 
 	// Set my field ID and nonce key.
-	$field_id   = esc_attr( $_POST['field_id'] );
-	$noncekey   = 'lw_woo_gdpr_user_optin_single_' . esc_attr( $_POST['field_id'] );
+	$field_id   = esc_attr( $_POST['field_id'] ); // WPCS: CSRF ok.
+	$noncekey   = 'lw_woo_gdpr_user_optin_single_' . esc_attr( $_POST['field_id'] ); // WPCS: CSRF ok.
 
 	// Check to see if our nonce failed.
 	if ( ! wp_verify_nonce( $_POST['nonce'], $noncekey ) ) {
@@ -279,13 +279,13 @@ function send_ajax_error_response( $errcode = '', $location = 'admin' ) {
 	$msgtxt = Helpers\notice_text( $errcode );
 
 	// Get my notice markup.
-	$notice = 'account' === sanitize_text_field( $location ) ? Layouts\account_message_markup( $msgtxt ) : Layouts\admin_message_markup( $msgtxt, 'error', true, true );
+	$notice = 'account' !== sanitize_text_field( $location ) ?  Layouts\admin_message_markup( $msgtxt, 'error', true, true ) : Layouts\account_message_markup( $msgtxt );
 
 	// Build our return.
 	$return = array(
 		'errcode' => $errcode,
 		'message' => $msgtxt,
-		'notice'  => $notice
+		'notice'  => $notice,
 	);
 
 	// And handle my JSON return.

@@ -112,7 +112,7 @@ function add_new_entry_block( $echo = false ) {
 
 	// Echo if requested.
 	if ( ! empty( $echo ) ) {
-		echo $field;
+		echo $field; // WPCS: XSS ok.
 	}
 
 	// Return it.
@@ -140,7 +140,7 @@ function table_row( $args = array(), $echo = false ) {
 	$action = ! empty( $args['action'] ) ? $args['action'] : Helpers\make_action_key( $args['id'] );
 
 	// Set our delete link.
-	$d_nonc = wp_create_nonce( 'lw_woo_gdpr_user_optin_single_' . esc_attr( $args['id'] )  );
+	$d_nonc = wp_create_nonce( 'lw_woo_gdpr_user_optin_single_' . esc_attr( $args['id'] ) );
 	$d_args = array( 'lw-woo-gdpr-user-optin-single-delete' => 1, 'field-id' => esc_attr( $args['id'] ), 'nonce' => $d_nonc );
 	$delete = add_query_arg( $d_args, Helpers\get_settings_tab_link() );
 
@@ -203,7 +203,7 @@ function table_row( $args = array(), $echo = false ) {
 
 	// Echo it if requested.
 	if ( ! empty( $echo ) ) {
-		echo $field;
+		echo $field; // WPCS: XSS ok.
 	}
 
 	// Just return it.
@@ -262,7 +262,7 @@ function optin_status_display_form( $user_id = 0, $echo = false ) {
 
 	// Echo if requested.
 	if ( ! empty( $echo ) ) {
-		echo $build;
+		echo $build; // WPCS: XSS ok.
 	}
 
 	// Return our build.
@@ -322,9 +322,7 @@ function optin_status_list( $user_id = 0, $echo = false ) {
 			$build .= single_checkbox_field( $setup );
 
 			// Add the little text for the required.
-			if ( ! empty( $field['required'] ) ) {
-				$build .= ' <span class="lw-woo-gdpr-user-optins-required-text">(' . __( 'required', 'lw-woo-gdpr-user-optins' ) . ')</span>';
-			}
+			$build .= ! empty( $field['required'] ) ? ' <span class="lw-woo-gdpr-user-optins-required-text">(' . __( 'required', 'lw-woo-gdpr-user-optins' ) . ')</span>' : '';
 
 		// Close the list item.
 		$build .= '</li>';
@@ -335,7 +333,7 @@ function optin_status_list( $user_id = 0, $echo = false ) {
 
 	// Echo if requested.
 	if ( ! empty( $echo ) ) {
-		echo $build;
+		echo $build; // WPCS: XSS ok.
 	}
 
 	// Return our build.
@@ -359,7 +357,7 @@ function single_checkbox_field( $args = array(), $echo = false ) {
 	$base   = array(
 		'id'        => microtime(),
 		'required'  => 0,
-		'checked'   => false
+		'checked'   => false,
 	);
 
 	// Parse my args.
@@ -384,21 +382,17 @@ function single_checkbox_field( $args = array(), $echo = false ) {
 		$field .= '<input class="woocommerce-form__input woocommerce-form-' . esc_attr( $args['id'] ) . '__input-checkbox woocommerce-form__input-checkbox input-checkbox" name="' . esc_attr( $name ) . '" id="' . esc_attr( $args['id'] ) . '" type="checkbox" value="' . esc_attr( $value ) . '" ' . checked( $args['checked'], $value, false ) . ' ' . $reqrd . '>';
 
 		// Add the label text if present.
-		if ( ! empty( $args['label'] ) ) {
-			$field .= '<span>' . esc_html( $args['label'] ) . '</span>';
-		}
+		$field .= ! empty( $args['label'] ) ? '<span>' . esc_html( $args['label'] ) . '</span>' : '';
 
 		// Add the required flag if present.
-		if ( ! empty( $args['required'] ) ) {
-			$field .= ' <span class="required">*</span>';
-		}
+		$field .= ! empty( $args['required'] ) ? ' <span class="required">*</span>' : '';
 
 	// And close the tag.
 	$field .= '</label>';
 
 	// Echo it if requested.
 	if ( ! empty( $echo ) ) {
-		echo $field;
+		echo $field; // WPCS: XSS ok.
 	}
 
 	// Just return it.
@@ -441,16 +435,14 @@ function admin_message_markup( $message = '', $type = 'error', $dismiss = true, 
 		$field .= '<p><strong>' . wp_kses_post( $message ) . '</strong></p>';
 
 		// Show the button if we set dismiss and button variables.
-		if ( $dismiss && $show_button ) {
-			$field .= '<button type="button" class="notice-dismiss">' . screen_reader_text() . '</button>';
-		}
+		$field .= $dismiss && $show_button ? '<button type="button" class="notice-dismiss">' . screen_reader_text() . '</button>' : '';
 
 	// And close the div.
 	$field .= '</div>';
 
 	// Echo it if requested.
 	if ( ! empty( $echo ) ) {
-		echo $field;
+		echo $field; // WPCS: XSS ok.
 	}
 
 	// Just return it.
@@ -498,7 +490,7 @@ function account_message_markup( $message = '', $type = 'error', $wrap = false, 
 
 	// Echo it if requested.
 	if ( ! empty( $echo ) ) {
-		echo $build;
+		echo $build; // WPCS: XSS ok.
 	}
 
 	// Just return it.

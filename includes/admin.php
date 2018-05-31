@@ -44,7 +44,7 @@ function display_admin_notices() {
 		$msg_text   = Helpers\notice_text( $msg_code );
 
 		// Output the message along with the dismissable.
-		echo Layouts\admin_message_markup( $msg_txt, 'success' );
+		echo Layouts\admin_message_markup( $msg_txt, 'success' ); // WPCS: XSS ok.
 
 		// And be done.
 		return;
@@ -57,7 +57,7 @@ function display_admin_notices() {
 	$error_text = Helpers\notice_text( $error_code );
 
 	// Output the message along with the dismissable.
-	echo Layouts\admin_message_markup( $error_text );
+	echo Layouts\admin_message_markup( $error_text ); // WPCS: XSS ok.
 }
 
 /**
@@ -87,7 +87,7 @@ function load_settings_assets( $hook ) {
 	wp_enqueue_style( $handle, Core\ASSETS_URL . '/css/' . $file . '.css', false, $vers, 'all' );
 
 	// And our JS.
-	wp_enqueue_script( $handle, Core\ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
+	//wp_enqueue_script( $handle, Core\ASSETS_URL . '/js/' . $file . '.js', array( 'jquery' ), $vers, true );
 }
 
 /**

@@ -55,6 +55,11 @@ function update_settings() {
 		return;
 	}
 
+	// Check to see if our nonce was provided.
+	if ( empty( $_POST['lw_woo_gdpr_new_optin_nonce'] ) || ! wp_verify_nonce( $_POST['lw_woo_gdpr_new_optin_nonce'], 'lw_woo_gdpr_new_optin_action' ) ) {
+		return;
+	}
+
 	// Set my empty data array.
 	$fields = array();
 
@@ -190,7 +195,7 @@ function output_repeating_setup( $args ) {
 	}
 
 	// Echo out the block.
-	echo Layouts\add_new_entry_block();
+	echo Layouts\add_new_entry_block(); // WPCS: XSS ok.
 }
 
 /**
@@ -218,7 +223,7 @@ function output_repeating_group( $args ) {
 		echo '<tr>';
 
 			echo '<th class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-list-field lw-woo-gdpr-user-optins-field-required lw-woo-gdpr-user-optins-field-header" scope="col">';
-				echo '<i title="' . __( 'Required', 'lw-woo-gdpr-user-optins' ) . '" class="dashicons dashicons-warning"></i>';
+				echo '<i title="' . esc_attr__( 'Required', 'lw-woo-gdpr-user-optins' ) . '" class="dashicons dashicons-warning"></i>';
 				echo '<span class="screen-reader-text">' . esc_html__( 'Required', 'lw-woo-gdpr-user-optins' ) . '</span>';
 			echo '</th>';
 
@@ -238,7 +243,7 @@ function output_repeating_group( $args ) {
 
 	// Loop my fields and make a block of each one.
 	foreach ( $fields as $field ) {
-		echo Layouts\table_row( $field );
+		echo Layouts\table_row( $field ); // WPCS: XSS ok.
 	}
 
 	// Close the table body.

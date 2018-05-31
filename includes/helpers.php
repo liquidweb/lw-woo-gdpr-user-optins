@@ -114,7 +114,7 @@ function notice_text( $code = '' ) {
 	// Set a default text.
 	$msgtxt = __( 'There was an error with your request.', 'lw-woo-gdpr-user-optins' );
 
-	// Return it with a filter
+	// Return it with a filter.
 	return apply_filters( 'lw_woo_gdpr_optins_default_fields', $msgtxt, $code );
 }
 
@@ -130,7 +130,7 @@ function get_settings_tab_link() {
 /**
  * Get our "My Account" page to use in the plugin.
  *
- * @param  array  $args  Any query args to add to the base URL.
+ * @param  array $args  Any query args to add to the base URL.
  *
  * @return string
  */
@@ -246,9 +246,9 @@ function get_required_optin_fields() {
 /**
  * Take an array key for the fields and return that data.
  *
- * @param  string $key     The key inside the data array we want.
+ * @param  string $key  The key inside the data array we want.
  *
- * @return mixed           Array if field is found, false otherwise.
+ * @return mixed        Array if field is found, false otherwise.
  */
 function get_single_optin_data( $key = '' ) {
 
@@ -272,15 +272,15 @@ function get_single_optin_data( $key = '' ) {
  *
  * @return array         The new data array.
  */
-function format_new_optin_field( $new_args = array(), $merge = false ) {
+function format_new_optin_field( $args = array(), $merge = false ) {
 
 	// Check the required title and label.
-	if ( empty( $new_args['title'] ) || empty( $new_args['label'] ) ) {
+	if ( empty( $args['title'] ) || empty( $args['label'] ) ) {
 		return false; // @@todo some error checking
 	}
 
 	// Sanitize the args in one fell swoop.
-	$filter = array_filter( $new_args, 'sanitize_text_field' );
+	$filter = array_map( 'sanitize_text_field', $args );
 
 	// Parse out the rest.
 	$id     = sanitize_title_with_dashes( $filter['title'], '', 'save' );
@@ -314,9 +314,9 @@ function format_new_optin_field( $new_args = array(), $merge = false ) {
 /**
  * Take the existing opt-in fields and create our full data array.
  *
- * @param  array $existing  The existing args saved by the user.
+ * @param  array $current  The existing args saved by the user.
  *
- * @return array $data      The new data array.
+ * @return array $data     The new data array.
  */
 function format_current_optin_fields( $current = array() ) {
 
@@ -332,23 +332,23 @@ function format_current_optin_fields( $current = array() ) {
 	foreach ( $current as $id => $args ) {
 
 		// Sanitize the args in one fell swoop.
-		$setup  = array_filter( $args, 'sanitize_text_field' );
+		$filter = array_map( 'sanitize_text_field', $args );
 
 		// Make sure we have an action.
-		$req    = ! empty( $args['required'] ) ? true : false;
-		$action = ! empty( $args['action'] ) ? esc_attr( $args['action'] ) : make_action_key( $id );
+		$req    = ! empty( $filter['required'] ) ? true : false;
+		$action = ! empty( $filter['action'] ) ? esc_attr( $filter['action'] ) : make_action_key( $id );
 
 		// Build the data array.
-		$build  = array(
+		$setup  = array(
 			'id'        => $id,
 			'action'    => $action,
-			'title'     => esc_attr( $setup['title'] ),
-			'label'     => esc_attr( $setup['label'] ),
+			'title'     => esc_attr( $filter['title'] ),
+			'label'     => esc_attr( $filter['label'] ),
 			'required'  => $req,
 		);
 
 		// And add it to our data.
-		$data[ $id ] = $build;
+		$data[ $id ] = $setup;
 	}
 
 	// Return the whole thing, or cleaned up.
@@ -361,7 +361,7 @@ function format_current_optin_fields( $current = array() ) {
  * @param  array  $fields  The field data we are going to save.
  * @param  string $remove  A field item to remove.
  *
- * @return void
+ * @return boolean
  */
 function update_saved_optin_fields( $fields = array(), $remove = '' ) {
 
@@ -378,6 +378,9 @@ function update_saved_optin_fields( $fields = array(), $remove = '' ) {
 		unset( $fields[ $remove ] );
 	}
 
+	// Unslash the bastards.
+	$fields = array_map( 'wp_unslash', $fields );
+
 	// And update our data.
 	update_option( Core\OPTION_NAME, $fields );
 
@@ -393,7 +396,7 @@ function update_saved_optin_fields( $fields = array(), $remove = '' ) {
  * @param  array   $data      The field data to use in updating.
  * @param  boolean $use_keys  Whether or not to use the array keys from the data.
  *
- * @return void
+ * @return boolean
  */
 function update_user_optins( $user_id = 0, $customer, $data = array(), $use_keys = true ) {
 
@@ -538,9 +541,9 @@ function account_page_redirect( $args = array() ) {
 /**
  * Adjust the "My Account" menu to make sure login is at the bottom.
  *
- * @param  array  $items  Our current array of items.
+ * @param  array $items  Our current array of items.
  *
- * @return array  $items  The modified array.
+ * @return array $items  The modified array.
  */
 function adjust_account_tab_order( $items = array() ) {
 
@@ -637,13 +640,13 @@ function maybe_admin_settings_tab( $hook = '' ) {
 		return false;
 	}
 
-	// Check the tab portion.
-	if ( empty( $_GET['tab'] ) || Core\TAB_BASE !== esc_attr( $_GET['tab'] ) ) {
-		return false;
+	// Check the tab portion and return true if it matches.
+	if ( ! empty( $_GET['tab'] ) && Core\TAB_BASE === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
+		return true;
 	}
 
-	// Passed everything, so return true.
-	return true;
+	// Nothing left to check, so go false.
+	return false;
 }
 
 /**
@@ -675,7 +678,7 @@ function check_ajax_constants() {
 /**
  * Confirm the user has selected all that are required.
  *
- * @param  array  $items  The items the user has selected.
+ * @param  array $items  The items the user has selected.
  *
  * @return boolean
  */
