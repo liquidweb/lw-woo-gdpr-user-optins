@@ -62,12 +62,7 @@ jQuery( document ).ready( function($) {
 				scrollToMessage();
 			}
 
-			// Handle the failure.
-			if ( response.success !== true ) {
-				return false;
-			}
-
-			// No error, so remove the field
+			// No error, save our items.
 			if ( response.success === true || response.success === 'true' ) {
 
 				// Handle loading the markup.
