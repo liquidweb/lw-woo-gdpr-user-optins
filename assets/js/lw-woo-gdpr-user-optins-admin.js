@@ -2,6 +2,7 @@
 /**
  * Clear the new field inputs.
  */
+/*
 function clearNewFieldInputs( showIcon ) {
 
 	// Set the new input row as a variable.
@@ -35,6 +36,7 @@ function clearNewFieldInputs( showIcon ) {
 		}, 3000 );
 	}
 }
+*/
 
 /**
  * Now let's get started.
@@ -42,14 +44,40 @@ function clearNewFieldInputs( showIcon ) {
 jQuery( document ).ready( function($) {
 
 	/**
+	 * Clear the new field inputs.
+	 */
+	function clearNewFieldInputs() {
+
+		// Set the new input row as a variable.
+		var $newFields  = $( 'tr.lw-woo-gdpr-user-optins-new-fields-row' );
+
+		// Set the icon.
+		var $iconCheck  = $newFields.find( 'span.lw-woo-gdpr-user-optins-field-new-success' );
+
+		// Uncheck the box.
+		$newFields.find( '#lw-woo-gdpr-user-optin-required-new' ).prop( 'checked', false );
+
+		// Handle the text input fields.
+		$newFields.find( '#lw-woo-gdpr-user-optin-title-new' ).val( '' ).focus();
+		$newFields.find( '#lw-woo-gdpr-user-optin-label-new' ).val( '' );
+
+		// Remove the class from the icon to display it.
+		$iconCheck.removeClass( 'lw-woo-gdpr-user-optins-field-hidden' );
+
+		// Then hide it again.
+		hideAgain = setTimeout( function() {
+			$iconCheck.addClass( 'lw-woo-gdpr-user-optins-field-hidden' );
+		}, 3000 );
+	}
+
+	/**
 	 * Set some vars for later
 	 */
-	var tabBody = 'body.lw-woo-gdpr-user-optins-admin-tab';
-	var saveForm = 'form#mainform';
-	var saveSubmit = false;
+	var saveSubmit  = false;
 
-	var $sortTable = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap' );
-	var sortBody = 'table.lw-woo-gdpr-user-optins-list-table-wrap tbody';
+	var $tabBody    = $( 'body.lw-woo-gdpr-user-optins-admin-tab' );
+	var $sortTable  = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap' );
+	var $sortBody   = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap tbody' );
 
 	/**
 	 * Set up the sortable table rows.
@@ -57,7 +85,7 @@ jQuery( document ).ready( function($) {
 	if ( $sortTable.length > 0 ) {
 
 		// Make our table sortable.
-		$( sortBody ).sortable({
+		$sortBody.sortable({
 			handle: '.lw-woo-gdpr-user-optins-field-trigger-icon',
 			containment: $sortTable,
 			update: function( event, ui ) {
@@ -65,7 +93,7 @@ jQuery( document ).ready( function($) {
 				// Build the data structure for the call with the updated sort order.
 				var data = {
 					action: 'lw_woo_gdpr_optins_sort',
-					sorted: $( sortBody ).sortable( 'toArray', { attribute: 'data-key' } )
+					sorted: $sortBody.sortable( 'toArray', { attribute: 'data-key' } )
 				};
 
 				// Send the post request, we don't actually care about the response.
@@ -80,14 +108,14 @@ jQuery( document ).ready( function($) {
 		/**
 		 * Set the button variable to handle the two submits.
 		 */
-		$( saveForm ).on( 'click', 'button', function() {
+		$( 'form#mainform' ).on( 'click', 'button', function() {
 			saveSubmit = $( this ).hasClass( 'lw-woo-gdpr-user-optin-add-new-button' );
 		});
 
 		/**
 		 * Add a new item into the table.
 		 */
-		$( saveForm ).submit( function( event ) {
+		$( 'form#mainform' ).submit( function( event ) {
 
 			// Bail on the actual save button.
 			if ( saveSubmit !== true ) {
@@ -122,14 +150,14 @@ jQuery( document ).ready( function($) {
 			jQuery.post( ajaxurl, data, function( response ) {
 
 				// Refresh the sortable table.
-				$( sortBody ).sortable( 'refreshPositions' );
+				$sortBody.sortable( 'refreshPositions' );
 
 				// Handle the failure.
 				if ( response.success !== true ) {
 
 					// Set our message if we have one.
 					if ( response.data.notice !== '' ) {
-						$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+						$tabBody.find( '.woocommerce h1:first' ).after( response.data.notice );
 					}
 
 					// And just bail.
@@ -140,7 +168,7 @@ jQuery( document ).ready( function($) {
 				if ( response.data.markup !== '' ) {
 
 					// Clear the new field inputs.
-					clearNewFieldInputs( true );
+					clearNewFieldInputs();
 
 					// Add the row itself.
 					$( 'table#lw-woo-gdpr-user-optins-list-table tbody tr:last' ).after( response.data.markup );
@@ -151,7 +179,7 @@ jQuery( document ).ready( function($) {
 		/**
 		 * Handle the individual item deletion.
 		 */
-		$( sortBody ).on( 'click', 'a.lw-woo-gdpr-user-optins-field-trigger-trash', function( event ) {
+		$sortBody.on( 'click', 'a.lw-woo-gdpr-user-optins-field-trigger-trash', function( event ) {
 
 			// Stop the actual click.
 			event.preventDefault();
@@ -160,7 +188,7 @@ jQuery( document ).ready( function($) {
 			var $this   = $( this );
 
 			// Set my field block.
-			var fieldBlock  = $this.parents( 'tr.lw-woo-gdpr-user-optins-single-row' );
+			var $fieldBlock = $this.parents( 'tr.lw-woo-gdpr-user-optins-single-row' );
 
 			// Fetch my field ID and nonce.
 			var fieldID     = $this.data( 'field-id' );
@@ -187,14 +215,14 @@ jQuery( document ).ready( function($) {
 			jQuery.post( ajaxurl, data, function( response ) {
 
 				// Refresh the sortable table.
-				$( sortBody ).sortable( 'refreshPositions' );
+				$sortBody.sortable( 'refreshPositions' );
 
 				// Handle the failure.
 				if ( response.success !== true ) {
 
 					// Set our message if we have one.
 					if ( response.data.notice !== '' ) {
-						$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+						$tabBody.find( '.woocommerce h1:first' ).after( response.data.notice );
 					}
 
 					// And just bail.
@@ -205,8 +233,8 @@ jQuery( document ).ready( function($) {
 				if ( response.success === true || response.success === 'true' ) {
 
 					// Fade out the field and then remove it.
-					$sortTable.find( fieldBlock ).fadeOut( 500, function() {
-						$( fieldBlock ).remove();
+					$fieldBlock.fadeOut( 500, function() {
+						$fieldBlock.remove();
 					});
 				}
 			}, 'json' );
@@ -215,8 +243,8 @@ jQuery( document ).ready( function($) {
 		/**
 		 * Handle the notice dismissal.
 		 */
-		$( tabBody ).on( 'click', '.notice-dismiss', function() {
-			$( tabBody ).find( '.lw-woo-gdpr-user-optins-admin-message' ).remove();
+		$tabBody.on( 'click', '.notice-dismiss', function() {
+			$tabBody.find( '.lw-woo-gdpr-user-optins-admin-message' ).remove();
 		});
 
 	}
