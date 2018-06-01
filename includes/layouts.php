@@ -99,7 +99,7 @@ function add_new_entry_block( $echo = false ) {
 				$field .= '</td>';
 
 				// Add a blank table spacer, because tables.
-				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger lw-woo-gdpr-user-optins-field-add-new-button">&nbsp;</td>';
+				$field .= '<td class="lw-woo-gdpr-user-optins-field lw-woo-gdpr-user-optins-new-field lw-woo-gdpr-user-optins-field-trigger">&nbsp;</td>';
 
 			// Close the row.
 			$field .= '</tr>';

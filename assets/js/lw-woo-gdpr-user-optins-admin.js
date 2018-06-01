@@ -45,18 +45,18 @@ jQuery( document ).ready( function($) {
 	var saveForm = 'form#mainform';
 	var saveSubmit = false;
 
-	var sortTable = 'table.lw-woo-gdpr-user-optins-list-table-wrap';
+	var $sortTable = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap' );
 	var sortBody = 'table.lw-woo-gdpr-user-optins-list-table-wrap tbody';
 
 	/**
 	 * Set up the sortable table rows.
 	 */
-	if ( sortTable.length > 0 ) {
+	if ( $sortTable.length > 0 ) {
 
 		// Make our table sortable.
 		$( sortBody ).sortable({
 			handle: '.lw-woo-gdpr-user-optins-field-trigger-icon',
-			containment: sortTable,
+			containment: $sortTable,
 			update: function( event, ui ) {
 
 				// Build the data structure for the call with the updated sort order.
@@ -148,7 +148,7 @@ jQuery( document ).ready( function($) {
 		/**
 		 * Handle the individual item deletion.
 		 */
-		$( sortTable ).on( 'click', 'a.lw-woo-gdpr-user-optins-field-trigger-trash', function( event ) {
+		$( sortBody ).on( 'click', 'a.lw-woo-gdpr-user-optins-field-trigger-trash', function( event ) {
 
 			// Stop the actual click.
 			event.preventDefault();
@@ -202,7 +202,7 @@ jQuery( document ).ready( function($) {
 				if ( response.success === true || response.success === 'true' ) {
 
 					// Fade out the field and then remove it.
-					$( sortTable ).find( fieldBlock ).fadeOut( 500, function() {
+					$sortTable.find( fieldBlock ).fadeOut( 500, function() {
 						$( fieldBlock ).remove();
 					});
 				}
