@@ -124,8 +124,10 @@ jQuery( document ).ready( function($) {
 				// Handle the failure.
 				if ( response.success !== true ) {
 
-					// Set our message.
-					$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+					// Set our message if we have one.
+					if ( response.data.notice !== '' ) {
+						$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+					}
 
 					// And just bail.
 					return false;
@@ -187,8 +189,10 @@ jQuery( document ).ready( function($) {
 				// Handle the failure.
 				if ( response.success !== true ) {
 
-					// Set our message.
-					$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+					// Set our message if we have one.
+					if ( response.data.notice !== '' ) {
+						$( tabBody ).find( '.woocommerce h1:first' ).after( response.data.notice );
+					}
 
 					// And just bail.
 					return false;
