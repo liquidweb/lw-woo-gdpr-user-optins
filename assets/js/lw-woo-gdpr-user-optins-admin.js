@@ -40,6 +40,7 @@ jQuery( document ).ready( function($) {
 	var $tabBody    = $( 'body.lw-woo-gdpr-user-optins-admin-tab' );
 	var $sortTable  = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap' );
 	var $sortBody   = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap tbody' );
+	var $mainForm   = $( 'body.lw-woo-gdpr-user-optins-admin-tab form#mainform' );
 
 	/**
 	 * Set up the sortable table rows.
@@ -65,19 +66,19 @@ jQuery( document ).ready( function($) {
 	}
 
 	// Don't even think about running this anywhere else.
-	if ( $( 'body.lw-woo-gdpr-user-optins-admin-tab' ).length > 0 ) {
+	if ( $tabBody.length > 0 ) {
 
 		/**
 		 * Set the button variable to handle the two submits.
 		 */
-		$( 'form#mainform' ).on( 'click', 'button', function() {
+		$mainForm.on( 'click', 'button', function() {
 			saveSubmit = $( this ).hasClass( 'lw-woo-gdpr-user-optin-add-new-button' );
 		});
 
 		/**
 		 * Add a new item into the table.
 		 */
-		$( 'form#mainform' ).submit( function( event ) {
+		$mainForm.submit( function( event ) {
 
 			// Bail on the actual save button.
 			if ( saveSubmit !== true ) {
@@ -118,7 +119,7 @@ jQuery( document ).ready( function($) {
 				if ( response.success !== true ) {
 
 					// Set our message if we have one.
-					if ( response.data.notice !== '' ) {
+					if ( undefined !== response.data && undefined !== response.data.notice && '' !== response.data.notice ) {
 						$tabBody.find( '.woocommerce h1:first' ).after( response.data.notice );
 					}
 
@@ -127,13 +128,13 @@ jQuery( document ).ready( function($) {
 				}
 
 				// We got table row markup, so show it.
-				if ( response.data.markup !== '' ) {
+				if ( undefined !== response.data && undefined !== response.data.markup && '' !== response.data.markup ) {
 
 					// Clear the new field inputs.
 					clearNewFieldInputs();
 
 					// Add the row itself.
-					$( 'table#lw-woo-gdpr-user-optins-list-table tbody tr:last' ).after( response.data.markup );
+					$sortBody.find( 'tr:last' ).after( response.data.markup );
 				}
 			}, 'json' );
 		});
@@ -183,7 +184,7 @@ jQuery( document ).ready( function($) {
 				if ( response.success !== true ) {
 
 					// Set our message if we have one.
-					if ( response.data.notice !== '' ) {
+					if ( undefined !== response.data && undefined !== response.data.notice && '' !== response.data.notice ) {
 						$tabBody.find( '.woocommerce h1:first' ).after( response.data.notice );
 					}
 
