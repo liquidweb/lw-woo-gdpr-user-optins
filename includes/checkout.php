@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\Checkout;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 
@@ -17,7 +19,6 @@ add_action( 'woocommerce_review_order_before_submit', __NAMESPACE__ . '\display_
 add_filter( 'woocommerce_checkout_posted_data', __NAMESPACE__ . '\merge_optin_post_data' );
 add_action( 'woocommerce_after_checkout_validation', __NAMESPACE__ . '\validate_optin_fields', 10, 2 );
 add_action( 'woocommerce_checkout_update_customer', __NAMESPACE__ . '\update_customer_optins', 10, 2 );
-
 
 /**
  * Add our new opt-in boxes to the checkout.

@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\Uninstall;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns as Core;
 
 /**
@@ -26,4 +28,3 @@ function uninstall() {
 	flush_rewrite_rules();
 }
 register_uninstall_hook( Core\FILE, __NAMESPACE__ . '\uninstall' );
-

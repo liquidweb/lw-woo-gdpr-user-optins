@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\AjaxActions;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
 
@@ -17,7 +19,6 @@ add_action( 'wp_ajax_lw_woo_gdpr_save_user_optins', __NAMESPACE__ . '\save_user_
 add_action( 'wp_ajax_lw_woo_gdpr_optins_sort', __NAMESPACE__ . '\update_sorted_rows' );
 add_action( 'wp_ajax_lw_woo_gdpr_optins_add_new', __NAMESPACE__ . '\add_new_optin_row' );
 add_action( 'wp_ajax_lw_woo_gdpr_optins_delete_row', __NAMESPACE__ . '\delete_single_row' );
-
 
 /**
  * Update our user opt-in values.

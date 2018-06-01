@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\Activate;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 

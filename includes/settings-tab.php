@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\SettingsTab;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
@@ -20,7 +22,6 @@ add_action( 'admin_init', __NAMESPACE__ . '\remove_single_field' );
 add_action( 'woocommerce_settings_tabs_gdpr_user_optins', __NAMESPACE__ . '\settings_tab' );
 add_action( 'woocommerce_admin_field_repeating_setup', __NAMESPACE__ . '\output_repeating_setup', 10, 1 );
 add_action( 'woocommerce_admin_field_repeating_group', __NAMESPACE__ . '\output_repeating_group', 10, 1 );
-
 
 /**
  * Add a new settings tab to the WooCommerce settings tabs array.
@@ -257,4 +258,3 @@ function output_repeating_group( $args ) {
 	// Close my table.
 	echo '</table>';
 }
-

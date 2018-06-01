@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce GDPR User Opt-Ins
  * Plugin URI:  https://github.com/liquidweb/lw-woo-gdpr-user-optins
  * Description: A toolset to allow WooCommerce store owners to create and manage user opt-in data.
- * Version:     0.0.1
+ * Version:     0.1.0
  * Author:      Liquid Web
  * Author URI:  https://www.liquidweb.com
  * Text Domain: lw-woo-gdpr-user-optins
@@ -14,13 +14,14 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 // Define our version.
-define( __NAMESPACE__ . '\VERS', '0.0.1' );
+define( __NAMESPACE__ . '\VERS', '0.1.0' );
 
 // Define our file base.
 define( __NAMESPACE__ . '\BASE', plugin_basename( __FILE__ ) );
@@ -45,7 +46,6 @@ define( __NAMESPACE__ . '\FRONT_VAR', 'privacy-data' );
 
 // Set our tab base slug constant.
 define( __NAMESPACE__ . '\TAB_BASE', 'gdpr_user_optins' );
-
 
 // Go and load our files.
 require_once __DIR__ . '/includes/helpers.php';

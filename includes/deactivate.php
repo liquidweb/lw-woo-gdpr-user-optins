@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\Deactivate;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns as Core;
 
 /**
@@ -23,4 +25,3 @@ function deactivate() {
 	flush_rewrite_rules();
 }
 register_deactivation_hook( Core\FILE, __NAMESPACE__ . '\deactivate' );
-

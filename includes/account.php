@@ -5,8 +5,10 @@
  * @package WooGDPRUserOptIns
  */
 
+// Declare our namespace.
 namespace LiquidWeb\WooGDPRUserOptIns\AccountPage;
 
+// Set our aliases.
 use LiquidWeb\WooGDPRUserOptIns as Core;
 use LiquidWeb\WooGDPRUserOptIns\Helpers as Helpers;
 use LiquidWeb\WooGDPRUserOptIns\Layouts as Layouts;
@@ -20,7 +22,6 @@ add_filter( 'the_title', __NAMESPACE__ . '\add_endpoint_title' );
 add_action( 'woocommerce_before_account_navigation', __NAMESPACE__ . '\add_endpoint_notices', 15 );
 add_filter( 'woocommerce_account_menu_items', __NAMESPACE__ . '\add_endpoint_menu_item' );
 add_action( 'woocommerce_account_privacy-data_endpoint', __NAMESPACE__ . '\add_endpoint_content' );
-
 
 /**
  * Look for our users changing their opt-in statuses.
@@ -202,4 +203,3 @@ function add_endpoint_menu_item( $items ) {
 function add_endpoint_content() {
 	Layouts\optin_status_display_form( get_current_user_id(), true );
 }
-
