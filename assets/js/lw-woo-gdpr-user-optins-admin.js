@@ -1,44 +1,5 @@
 
 /**
- * Clear the new field inputs.
- */
-/*
-function clearNewFieldInputs( showIcon ) {
-
-	// Set the new input row as a variable.
-	var fieldRow   = jQuery( 'tr.lw-woo-gdpr-user-optins-new-fields-row' );
-
-	// Map out all the fields items and clear them out.
-	jQuery( fieldRow ).map( function() {
-
-		// Handle the text input fields.
-		jQuery( this ).find( 'input[type=text]' ).val( '' );
-
-		// And my checkbox.
-		jQuery( this ).find( 'input[type=checkbox]' ).prop( 'checked', false );
-	});
-
-	// Set the focus to the title field.
-	jQuery( fieldRow ).find( '#lw-woo-gdpr-user-optin-title-new' ).focus();
-
-	// Add the success icon.
-	if ( showIcon ) {
-
-		// Set the icon.
-		var iconCheck = jQuery( fieldRow ).find( 'span.lw-woo-gdpr-user-optins-field-new-success' );
-
-		// Remove the class.
-		iconCheck.removeClass( 'lw-woo-gdpr-user-optins-field-hidden' );
-
-		// Then hide it again.
-		hideAgain = setTimeout( function() {
-			iconCheck.addClass( 'lw-woo-gdpr-user-optins-field-hidden' );
-		}, 3000 );
-	}
-}
-*/
-
-/**
  * Now let's get started.
  */
 jQuery( document ).ready( function($) {
@@ -70,11 +31,12 @@ jQuery( document ).ready( function($) {
 		}, 3000 );
 	}
 
-	/**
-	 * Set some vars for later
-	 */
+	// Set our button variable to false.
 	var saveSubmit  = false;
 
+	/**
+	 * Set some object vars for later.
+	 */
 	var $tabBody    = $( 'body.lw-woo-gdpr-user-optins-admin-tab' );
 	var $sortTable  = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap' );
 	var $sortBody   = $( 'table.lw-woo-gdpr-user-optins-list-table-wrap tbody' );
@@ -247,6 +209,7 @@ jQuery( document ).ready( function($) {
 			$tabBody.find( '.lw-woo-gdpr-user-optins-admin-message' ).remove();
 		});
 
+		// Nothing else here.
 	}
 
 //********************************************************
