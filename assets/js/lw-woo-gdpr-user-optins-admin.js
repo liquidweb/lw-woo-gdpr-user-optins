@@ -4,8 +4,11 @@
  */
 function clearNewFieldInputs( showIcon ) {
 
+	// Set the new input row as a variable.
+	var fieldRow   = jQuery( 'tr.lw-woo-gdpr-user-optins-new-fields-row' );
+
 	// Map out all the fields items and clear them out.
-	jQuery( '.lw-woo-gdpr-user-optins-new-fields-row' ).map( function() {
+	jQuery( fieldRow ).map( function() {
 
 		// Handle the text input fields.
 		jQuery( this ).find( 'input[type=text]' ).val( '' );
@@ -15,13 +18,13 @@ function clearNewFieldInputs( showIcon ) {
 	});
 
 	// Set the focus to the title field.
-	jQuery( '.lw-woo-gdpr-user-optins-new-fields-row #lw-woo-gdpr-user-optin-title-new' ).focus();
+	jQuery( fieldRow ).find( '#lw-woo-gdpr-user-optin-title-new' ).focus();
 
 	// Add the success icon.
 	if ( showIcon ) {
 
 		// Set the icon.
-		var iconCheck = jQuery( 'tr.lw-woo-gdpr-user-optins-new-fields-row span.lw-woo-gdpr-user-optins-field-new-success' );
+		var iconCheck = jQuery( fieldRow ).find( 'span.lw-woo-gdpr-user-optins-field-new-success' );
 
 		// Remove the class.
 		iconCheck.removeClass( 'lw-woo-gdpr-user-optins-field-hidden' );
