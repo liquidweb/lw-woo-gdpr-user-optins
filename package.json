@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "grunt-cli": "^1.2.0",
-    "npm": "^6.0.1"
+    "npm": "^6.14.6"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
